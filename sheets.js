@@ -73,7 +73,7 @@ function doGet(e) {
 // 設置 Google Sheets API 的說明
 document.addEventListener('DOMContentLoaded', () => {
     // 檢查是否已設置 Google Script URL
-    if (GOOGLE_SCRIPT_URL.includes('YOUR_GOOGLE_SCRIPT_ID')) {
+    if (GOOGLE_SCRIPT_URL.includes('AKfycbx__OWRZbiN8XQywvrSdvFKg0fd_aBxRwXY1RzBMhwIXhoF3JFTq_6n2QkDoT27IpMSLA')) {
         console.warn('請替換 Google Script URL 為您的實際部署 URL');
     }
 });
