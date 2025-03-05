@@ -1,0 +1,407 @@
+/* 全局樣式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background-color: #f9f0ff;
+    color: #333;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+.section {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.5s ease, visibility 0.5s;
+    padding: 20px;
+    text-align: center;
+}
+
+.section.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.button {
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.button:hover {
+    background-color: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #ff6b6b;
+    font-size: 2rem;
+}
+
+/* 倒數計時樣式 */
+#countdown {
+    background-color: #f9f0ff;
+}
+
+#countdown-number {
+    font-size: 10rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    animation: countdownAnimation 1s ease-in-out;
+}
+
+@keyframes countdownAnimation {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+/* 蛋糕區塊樣式 */
+.cake-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto 30px;
+}
+
+.cake {
+    position: relative;
+    width: 200px;
+    height: 180px;
+    margin: 0 auto;
+}
+
+.cake-base {
+    position: absolute;
+    bottom: 0;
+    width: 200px;
+    height: 70px;
+    background-color: #ffd1dc;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cake-middle {
+    position: absolute;
+    bottom: 70px;
+    width: 180px;
+    height: 60px;
+    left: 10px;
+    background-color: #ffb6c1;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.cake-top {
+    position: absolute;
+    bottom: 130px;
+    width: 160px;
+    height: 50px;
+    left: 20px;
+    background-color: #ff9eb5;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+}
+
+.candles {
+    position: absolute;
+    bottom: 180px;
+    width: 160px;
+    display: flex;
+    justify-content: space-around;
+    left: 20px;
+}
+
+.candle {
+    position: relative;
+    width: 10px;
+    height: 50px;
+}
+
+.candle-body {
+    position: absolute;
+    bottom: 0;
+    width: 10px;
+    height: 40px;
+    background: linear-gradient(to right, #f5f5f5, #ffffff, #f5f5f5);
+    border-radius: 5px;
+}
+
+.flame {
+    position: absolute;
+    bottom: 40px;
+    left: -5px;
+    width: 20px;
+    height: 30px;
+    background: #ffdd00;
+    border-radius: 50% 50% 20% 20%;
+    box-shadow: 0 0 15px #ff9900, 0 0 20px #ff9900;
+    transform-origin: center bottom;
+    animation: flameFlicker 1s ease-in-out infinite alternate;
+}
+
+.inner-flame {
+    position: absolute;
+    width: 10px;
+    height: 15px;
+    background: #ff9900;
+    border-radius: 50% 50% 20% 20%;
+    top: 5px;
+    left: 5px;
+}
+
+.smoke {
+    position: absolute;
+    bottom: 70px;
+    left: 0;
+    width: 10px;
+    height: 0;
+    background: rgba(200, 200, 200, 0.4);
+    border-radius: 10px;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.smoke.active {
+    height: 50px;
+    opacity: 0.7;
+    animation: smokeRise 2s ease-out;
+}
+
+@keyframes flameFlicker {
+    0%, 100% {
+        transform: scaleX(1) scaleY(1) rotate(0deg);
+        box-shadow: 0 0 15px #ff9900, 0 0 20px #ff9900;
+    }
+    25% {
+        transform: scaleX(1.1) scaleY(0.9) rotate(2deg);
+        box-shadow: 0 0 18px #ff9900, 0 0 24px #ff9900;
+    }
+    50% {
+        transform: scaleX(0.9) scaleY(1.1) rotate(-2deg);
+        box-shadow: 0 0 12px #ff9900, 0 0 16px #ff9900;
+    }
+    75% {
+        transform: scaleX(1.05) scaleY(0.95) rotate(1deg);
+        box-shadow: 0 0 15px #ff9900, 0 0 20px #ff9900;
+    }
+}
+
+@keyframes smokeRise {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 0.7;
+    }
+    100% {
+        transform: translateY(-50px) scale(2);
+        opacity: 0;
+    }
+}
+
+.birthday-message {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #ff6b6b;
+    margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 願望填寫區塊樣式 */
+.wish-form {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+#wish-input {
+    flex: 1;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 30px 0 0 30px;
+    font-size: 16px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#wish-input:focus {
+    border-color: #ff6b6b;
+}
+
+#add-wish {
+    border-radius: 0 30px 30px 0;
+    margin-top: 0;
+}
+
+.wishes-container {
+    width: 100%;
+    max-width: 500px;
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.wishes-container h3 {
+    color: #ff6b6b;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+#wishes-list, #final-wishes-list {
+    list-style-type: none;
+    text-align: left;
+}
+
+#wishes-list li, #final-wishes-list li {
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#wishes-list li:last-child, #final-wishes-list li:last-child {
+    border-bottom: none;
+}
+
+.delete-wish {
+    background: none;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* 吹蠟燭區塊樣式 */
+.blow-instructions {
+    margin-bottom: 30px;
+}
+
+#volume-meter {
+    width: 300px;
+    height: 20px;
+    background-color: #eee;
+    border-radius: 10px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+#volume-level {
+    height: 100%;
+    width: 0%;
+    background-color: #ff6b6b;
+    transition: width 0.1s ease;
+}
+
+.blow-flame {
+    transition: all 0.5s ease;
+}
+
+.blow-flame.shrink {
+    transform: scale(0.7);
+    opacity: 0.7;
+}
+
+.blow-flame.extinguished {
+    opacity: 0;
+    height: 0;
+}
+
+/* 願望達成區塊樣式 */
+.success-message {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    width: 90%;
+}
+
+.wishes-summary {
+    margin-top: 20px;
+    text-align: left;
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .cake-container {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .cake {
+        width: 180px;
+        height: 160px;
+    }
+    
+    .cake-base {
+        width: 180px;
+        height: 60px;
+    }
+    
+    .cake-middle {
+        width: 160px;
+        height: 50px;
+        bottom: 60px;
+        left: 10px;
+    }
+    
+    .cake-top {
+        width: 140px;
+        height: 40px;
+        bottom: 110px;
+        left: 20px;
+    }
+    
+    .candles {
+        bottom: 150px;
+        width: 140px;
+    }
+    
+    .birthday-message {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.8rem;
+    }
+    
+    #countdown-number {
+        font-size: 8rem;
+    }
+} 

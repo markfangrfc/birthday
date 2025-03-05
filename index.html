@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>生日快樂！</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- 倒數計時區塊 -->
+    <div id="countdown" class="section active">
+        <div id="countdown-number">3</div>
+    </div>
+
+    <!-- 生日蛋糕區塊 -->
+    <div id="cake-section" class="section">
+        <div class="cake-container">
+            <div class="cake">
+                <div class="cake-base"></div>
+                <div class="cake-middle"></div>
+                <div class="cake-top"></div>
+                
+                <!-- 蠟燭 -->
+                <div class="candles">
+                    <div class="candle">
+                        <div class="flame" id="flame1">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="smoke1"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame" id="flame2">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="smoke2"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame" id="flame3">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="smoke3"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="birthday-message">生日快樂！</div>
+        <button id="next-button" class="button">許願 <i class="fas fa-arrow-right"></i></button>
+    </div>
+
+    <!-- 願望填寫區塊 -->
+    <div id="wish-section" class="section">
+        <h2>寫下你的願望</h2>
+        <div class="wish-form">
+            <input type="text" id="wish-input" placeholder="輸入你的願望...">
+            <button id="add-wish" class="button">添加願望</button>
+        </div>
+        <div class="wishes-container">
+            <h3>我的願望清單：</h3>
+            <ul id="wishes-list"></ul>
+        </div>
+        <button id="blow-candles-button" class="button">吹蠟燭 <i class="fas fa-wind"></i></button>
+    </div>
+
+    <!-- 吹蠟燭遊戲區塊 -->
+    <div id="blow-section" class="section">
+        <div class="blow-instructions">
+            <h2>吹熄蠟燭</h2>
+            <p>對著麥克風吹氣，讓蠟燭熄滅！</p>
+            <button id="start-mic" class="button">開始吹蠟燭</button>
+            <div id="volume-meter">
+                <div id="volume-level"></div>
+            </div>
+        </div>
+        
+        <div class="cake-container">
+            <div class="cake">
+                <div class="cake-base"></div>
+                <div class="cake-middle"></div>
+                <div class="cake-top"></div>
+                
+                <!-- 蠟燭 -->
+                <div class="candles">
+                    <div class="candle">
+                        <div class="flame blow-flame" id="blow-flame1">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="blow-smoke1"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame blow-flame" id="blow-flame2">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="blow-smoke2"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle">
+                        <div class="flame blow-flame" id="blow-flame3">
+                            <div class="inner-flame"></div>
+                        </div>
+                        <div class="smoke" id="blow-smoke3"></div>
+                        <div class="candle-body"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 願望達成區塊 -->
+    <div id="success-section" class="section">
+        <div class="success-message">
+            <h2>願望已送出！</h2>
+            <p>希望你的願望都能實現 ✨</p>
+            <div class="wishes-summary">
+                <h3>你的願望清單：</h3>
+                <ul id="final-wishes-list"></ul>
+            </div>
+            <button id="restart-button" class="button">重新開始</button>
+        </div>
+    </div>
+
+    <audio id="birthday-song" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" preload="auto"></audio>
+
+    <script src="script.js"></script>
+    <script src="audio.js"></script>
+    <script src="sheets.js"></script>
+</body>
+</html> 
