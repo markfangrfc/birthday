@@ -7,8 +7,8 @@ let microphoneActive = false;
 let blowDetectionInterval;
 
 // 麥克風敏感度設置
-const BLOW_THRESHOLD = 130; // 吹氣檢測閾值
-const BLOW_DURATION = 1000; // 持續吹氣時間（毫秒）
+const BLOW_THRESHOLD = 100; // 吹氣檢測閾值
+const BLOW_DURATION = 700; // 持續吹氣時間（毫秒）
 const VOLUME_MULTIPLIER = 5; // 音量顯示倍數
 
 // DOM 載入完成後執行
