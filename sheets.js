@@ -3,32 +3,49 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx__OWRZbiN8X
 
 // 發送願望到 Google Sheets
 function sendWishToGoogleSheets(wish) {
-    // 獲取當前時間
-    const timestamp = new Date().toISOString();
-    
-    // 準備要發送的數據
-    const data = {
-        timestamp: timestamp,
-        wish: wish
-    };
-    
-    // 使用 fetch API 發送數據
-    fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors', // 這是必要的，因為 Google Apps Script 不支持 CORS
-        cache: 'no-cache',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        redirect: 'follow',
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        console.log('願望已發送到 Google Sheets');
-    })
-    .catch(error => {
-        console.error('發送願望時出錯:', error);
-    });
+    try {
+        // 獲取當前時間
+        const timestamp = new Date().toISOString();
+        
+        // 準備要發送的數據
+        const data = {
+            timestamp: timestamp,
+            wish: wish
+        };
+        
+        console.log('正在發送願望到 Google Sheets:', data);
+        
+        // 使用 fetch API 發送數據
+        fetch(GOOGLE_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors', // 這是必要的，因為 Google Apps Script 不支持 CORS
+            cache: 'no-cache',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            redirect: 'follow',
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            console.log('願望發送成功，響應狀態:', response.status);
+            // 由於使用了 no-cors 模式，無法讀取響應內容
+            console.log('注意：由於使用了 no-cors 模式，無法讀取詳細響應內容');
+            
+            // 嘗試直接訪問 Google Script URL 以檢查是否可訪問
+            fetch(GOOGLE_SCRIPT_URL, { method: 'GET', mode: 'no-cors' })
+                .then(() => console.log('Google Script URL 可以訪問'))
+                .catch(error => console.error('無法訪問 Google Script URL:', error));
+                
+            return response;
+        })
+        .catch(error => {
+            console.error('發送願望時出錯:', error);
+        });
+    } catch (error) {
+        console.error('發送願望過程中發生異常:', error);
+        // 如果發送失敗，使用模擬函數作為備份
+        mockSendWishToGoogleSheets(wish);
+    }
 }
 
 // 以下是 Google Apps Script 代碼，需要部署為 Web 應用程序

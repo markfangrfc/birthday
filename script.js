@@ -109,6 +109,7 @@ function addWish() {
     const wish = wishInput.value.trim();
     
     if (wish) {
+        console.log('添加願望:', wish);
         wishes.push(wish);
         updateWishList();
         
@@ -117,6 +118,7 @@ function addWish() {
         wishInput.focus();
         
         // 將願望發送到 Google Sheets
+        console.log('正在調用 sendWishToGoogleSheets 函數...');
         sendWishToGoogleSheets(wish);
     }
 }
