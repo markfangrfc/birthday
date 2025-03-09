@@ -453,12 +453,43 @@ h2 {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
 }
 
+.game-play {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+}
+
+.game-status {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: white;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+#score-display-playing {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#score, #total-stars-playing {
+    font-size: 22px;
+    margin: 0 5px;
+    color: #ffcc00;
+    text-shadow: 0 0 5px rgba(255, 204, 0, 0.8);
+}
+
 .shooting-star {
     position: absolute;
     display: flex;
     align-items: center;
     cursor: pointer;
-    z-index: 5;
+    z-index: 50;
     transition: transform 0.1s ease;
 }
 
@@ -467,6 +498,7 @@ h2 {
     height: 3px;
     background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8));
     border-radius: 3px;
+    position: relative;
 }
 
 .star-head {
@@ -644,21 +676,6 @@ h2 {
 /* 確保進度條在蠟燭上方有足夠空間 */
 #blow-section .blow-instructions {
     margin-bottom: 80px;
-}
-
-.game-play {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    z-index: 10;
-}
-
-.game-status {
-    background-color: rgba(0, 0, 0, 0.6);
-    padding: 10px 20px;
-    border-radius: 30px;
-    color: white;
-    text-align: center;
 }
 
 .game-complete {
