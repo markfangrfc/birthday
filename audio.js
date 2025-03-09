@@ -30,6 +30,12 @@ async function toggleMicrophone() {
             startMicButton.textContent = '停止監聽';
             startMicButton.classList.add('active');
             
+            // 降低背景音樂音量至30%
+            const bgMusic = document.getElementById('birthday-song');
+            if (bgMusic) {
+                bgMusic.volume = 0.3;
+            }
+            
             // 開始監聽吹氣
             startBlowDetection();
             
@@ -41,6 +47,12 @@ async function toggleMicrophone() {
     } else {
         // 停止麥克風
         stopMicrophone();
+        
+        // 恢復背景音樂音量
+        const bgMusic = document.getElementById('birthday-song');
+        if (bgMusic) {
+            bgMusic.volume = 1.0;
+        }
         
         // 更新按鈕文字
         startMicButton.textContent = '開始吹蠟燭';
