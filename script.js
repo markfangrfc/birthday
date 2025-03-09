@@ -1,6 +1,7 @@
 // 全局變數
 let currentSection = 'countdown';
-const wishes = [];
+const wishes = []; // 用於顯示的願望列表
+const allWishes = []; // 包含所有願望，包括界面上已"刪除"的
 let countdownInterval;
 let birthdaySong;
 let shootingStarsInterval;
@@ -64,13 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
         resetApp();
     });
     
-    // 初始化願望列表事件
-    document.getElementById('wishes-list').addEventListener('click', (e) => {
-        if (e.target.classList.contains('delete-wish')) {
-            const index = parseInt(e.target.dataset.index);
-            deleteWish(index);
-        }
-    });
+    // 正確地初始化願望列表的刪除事件
+    setupWishListEvents();
     
     // 初始化流星音效
     starSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fairy-glitter-sweep-1826.mp3');
@@ -79,6 +75,27 @@ document.addEventListener('DOMContentLoaded', () => {
     // 初始檢查 - 調試用
     console.log('DOM載入完成，初始化已執行');
 });
+
+// 設置願望列表的事件處理
+function setupWishListEvents() {
+    document.getElementById('wishes-list').addEventListener('click', (e) => {
+        // 檢查是否點擊了刪除按鈕或其圖標
+        if (e.target.classList.contains('delete-wish') || 
+            (e.target.tagName === 'I' && e.target.parentElement.classList.contains('delete-wish'))) {
+            let target = e.target;
+            // 如果點擊的是圖標，則獲取其父元素（即按鈕）
+            if (e.target.tagName === 'I') {
+                target = e.target.parentElement;
+            }
+            
+            const index = parseInt(target.dataset.index);
+            console.log(`嘗試刪除願望，索引: ${index}`);
+            deleteWish(index);
+        }
+    });
+    
+    console.log('願望列表刪除事件已設置');
+}
 
 // 開始倒數計時
 function startCountdown() {
@@ -105,9 +122,85 @@ function startCountdown() {
                 
                 // 播放生日歌
                 playBirthdaySong();
+                
+                // 創建煙火效果
+                createFireworks();
             }, 1000);
         }
     }, 1500);
+}
+
+// 創建煙火效果
+function createFireworks() {
+    const cakeSection = document.getElementById('cake-section');
+    const fireworksCount = 10; // 煙火數量
+    
+    // 在不同位置創建多個煙火
+    for (let i = 0; i < fireworksCount; i++) {
+        setTimeout(() => {
+            // 根據視窗大小隨機位置
+            const x = Math.random() * window.innerWidth * 0.8 + window.innerWidth * 0.1;
+            const y = Math.random() * window.innerHeight * 0.6 + window.innerHeight * 0.2;
+            
+            createSingleFirework(cakeSection, x, y);
+        }, i * 300); // 每300毫秒發射一個煙火
+    }
+}
+
+// 創建單個煙火
+function createSingleFirework(container, x, y) {
+    // 煙火中心點
+    const firework = document.createElement('div');
+    firework.classList.add('firework');
+    firework.style.left = `${x}px`;
+    firework.style.top = `${y}px`;
+    
+    // 隨機顏色
+    const colors = [
+        '#FF5252', '#FFEB3B', '#2196F3', '#4CAF50', '#9C27B0', 
+        '#FF9800', '#00BCD4', '#F44336', '#E91E63', '#3F51B5'
+    ];
+    
+    // 創建煙火粒子
+    const particleCount = 30;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('firework-particle');
+        
+        // 隨機角度和距離
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 50 + Math.random() * 50;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+        
+        // 設置CSS變量控制動畫終點
+        particle.style.setProperty('--tx', `${tx}px`);
+        particle.style.setProperty('--ty', `${ty}px`);
+        
+        // 隨機顏色
+        const colorIndex = Math.floor(Math.random() * colors.length);
+        particle.style.backgroundColor = colors[colorIndex];
+        
+        // 設置起始位置
+        particle.style.left = `${x}px`;
+        particle.style.top = `${y}px`;
+        
+        // 添加到容器
+        container.appendChild(particle);
+        
+        // 動畫結束後移除元素
+        setTimeout(() => {
+            particle.remove();
+        }, 1200);
+    }
+    
+    // 添加到容器
+    container.appendChild(firework);
+    
+    // 煙火中心動畫結束後移除
+    setTimeout(() => {
+        firework.remove();
+    }, 1000);
 }
 
 // 播放生日歌
@@ -176,6 +269,7 @@ function addWish() {
     if (wish) {
         console.log('添加願望:', wish);
         wishes.push(wish);
+        allWishes.push(wish); // 添加到所有願望列表
         updateWishList();
         
         // 清空輸入框
@@ -188,10 +282,17 @@ function addWish() {
     }
 }
 
-// 刪除願望
+// 刪除願望（只從界面中刪除，保留在總列表中）
 function deleteWish(index) {
-    wishes.splice(index, 1);
-    updateWishList();
+    console.log(`從界面中刪除願望，索引: ${index}`);
+    if (index >= 0 && index < wishes.length) {
+        // 只從顯示列表中移除，但保留在 allWishes 中
+        wishes.splice(index, 1);
+        updateWishList();
+        console.log(`願望已從界面刪除，剩餘顯示願望數: ${wishes.length}，總願望數: ${allWishes.length}`);
+    } else {
+        console.error(`刪除願望失敗: 索引 ${index} 超出範圍`);
+    }
 }
 
 // 更新願望列表
@@ -219,11 +320,14 @@ function updateFinalWishList() {
     const finalWishList = document.getElementById('final-wishes-list');
     finalWishList.innerHTML = '';
     
+    // 只使用當前顯示的願望列表
     wishes.forEach(wish => {
         const li = document.createElement('li');
         li.textContent = wish;
         finalWishList.appendChild(li);
     });
+    
+    console.log(`最終願望列表已更新，顯示 ${wishes.length} 個願望`);
 }
 
 // 重置應用
@@ -237,6 +341,7 @@ function resetApp() {
     
     // 重置願望
     wishes.length = 0;
+    allWishes.length = 0; // 也清空所有願望列表
     updateWishList();
     
     // 清空流星
@@ -298,7 +403,12 @@ function prepareShootingStarsGame() {
     
     // 重置分數
     starScore = 0;
+    
+    // 使用當前顯示的願望列表，而不是所有願望
     totalStars = wishes.length;
+    
+    // 注意：不再從 allWishes 恢復願望，只使用當前界面上顯示的願望
+    console.log(`流星遊戲將僅使用當前顯示的 ${wishes.length} 個願望`);
     
     // 更新總共的願望數量
     document.getElementById('total-stars').textContent = totalStars;
@@ -327,7 +437,7 @@ function startShootingStarsGame() {
     // 清除之前的流星
     clearShootingStars();
     
-    // 開始發射流星
+    // 開始發射流星 - 只使用當前顯示的願望
     shootingStarsInterval = setInterval(() => {
         if (wishes.length > 0) {
             const randomIndex = Math.floor(Math.random() * wishes.length);
@@ -339,8 +449,10 @@ function startShootingStarsGame() {
             console.log('沒有更多願望，停止發射流星');
             
             // 如果沒有願望但遊戲已開始，直接顯示完成
-            if (starScore >= totalStars && totalStars > 0) {
-                setTimeout(showGameCompleteMessage, 1000);
+            if (totalStars === 0) {
+                setTimeout(() => {
+                    showGameCompleteMessage();
+                }, 1000);
             }
         }
     }, 2000); // 每2秒發射一顆流星
@@ -512,11 +624,11 @@ function collectStar(starElement, wish) {
     updateScoreDisplay();
     console.log(`分數更新: ${starScore}/${totalStars}`);
     
-    // 從願望列表中移除
+    // 從願望列表中移除 - 只從當前顯示的願望中移除
     const wishIndex = wishes.indexOf(wish);
     if (wishIndex !== -1) {
         wishes.splice(wishIndex, 1);
-        console.log(`願望已從列表中移除，剩餘願望數: ${wishes.length}`);
+        console.log(`願望已從遊戲列表中移除，剩餘願望數: ${wishes.length}`);
     }
     
     // 動畫結束後移除流星
