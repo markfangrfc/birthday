@@ -125,20 +125,39 @@
 
     <!-- 流星遊戲區塊 -->
     <div id="shooting-stars-section" class="section">
-        <div class="game-instructions">
+        <!-- 遊戲規則介紹部分 -->
+        <div id="game-intro" class="game-instructions">
             <h2>收集流星中的願望</h2>
             <p>點擊飛過的流星來收集願望，讓願望成真！</p>
-            <div id="score-display">已收集: <span id="score">0</span>/<span id="total-stars">0</span></div>
+            <div id="score-display">願望數量: <span id="total-stars">0</span> 個</div>
+            <button id="start-game-button" class="button">開始收集 <i class="fas fa-play"></i></button>
         </div>
+        
+        <!-- 遊戲進行中部分 -->
+        <div id="game-play" class="game-play" style="display: none;">
+            <div class="game-status">
+                <div id="score-display-playing">已收集: <span id="score">0</span>/<span id="total-stars-playing">0</span></div>
+            </div>
+        </div>
+        
+        <!-- 遊戲完成部分 -->
+        <div id="game-complete" class="game-complete" style="display: none;">
+            <div class="game-success-message">
+                <h2>願望全部收集完成！</h2>
+                <p>我會盡力幫你實現這些願望 ❤️</p>
+            </div>
+        </div>
+        
         <div id="shooting-stars-container" class="stars-container">
             <!-- 流星會在這裡動態生成 -->
         </div>
+        
         <div class="game-controls">
             <button id="restart-button" class="button">重新開始</button>
         </div>
     </div>
 
-    <audio id="birthday-song" src="https://dl.dropboxusercontent.com/s/1cdmti3kf33ofzq/happy-birthday-music.mp3" preload="auto"></audio>
+    <audio id="birthday-song" src="birthday-song.mp3" preload="auto"></audio>
 
     <script src="script.js"></script>
     <script src="audio.js"></script>

@@ -644,4 +644,54 @@ h2 {
 /* 確保進度條在蠟燭上方有足夠空間 */
 #blow-section .blow-instructions {
     margin-bottom: 80px;
+}
+
+.game-play {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 10;
+}
+
+.game-status {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 10px 20px;
+    border-radius: 30px;
+    color: white;
+    text-align: center;
+}
+
+.game-complete {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+}
+
+.game-success-message {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 15px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+    animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.9); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+#start-game-button {
+    margin-top: 20px;
+    background-color: #4CAF50;
+    font-size: 18px;
+    padding: 12px 30px;
+}
+
+#start-game-button:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
 } 

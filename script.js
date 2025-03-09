@@ -7,6 +7,7 @@ let shootingStarsInterval;
 let starScore = 0;
 let totalStars = 0;
 let starSound;
+let musicStarted = false;
 
 // DOM 載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,6 +20,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // 按鈕事件監聽
     document.getElementById('next-button').addEventListener('click', () => {
         switchSection('cake-section', 'wish-section');
+        
+        // 許願時播放音樂
+        if (!musicStarted) {
+            playBirthdaySong();
+            musicStarted = true;
+        }
     });
     
     document.getElementById('add-wish').addEventListener('click', addWish);
@@ -31,11 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     document.getElementById('blow-candles-button').addEventListener('click', () => {
         switchSection('wish-section', 'blow-section');
+        
+        // 進入吹蠟燭遊戲時立即將音量降至30%
+        if (birthdaySong) {
+            birthdaySong.volume = 0.3;
+        }
     });
     
     document.getElementById('start-shooting-stars').addEventListener('click', () => {
         switchSection('success-section', 'shooting-stars-section');
-        initShootingStarsGame();
+        prepareShootingStarsGame();
+    });
+    
+    document.getElementById('start-game-button').addEventListener('click', () => {
+        startShootingStarsGame();
     });
     
     document.getElementById('restart-button').addEventListener('click', () => {
@@ -89,16 +105,6 @@ function startCountdown() {
 function playBirthdaySong() {
     // 確保音樂從頭開始播放
     birthdaySong.currentTime = 0;
-    
-    // 檢查音樂源是否可用，如果不可用則使用備用源
-    birthdaySong.addEventListener('error', () => {
-        console.log('主要音樂源無法播放，切換到備用源');
-        birthdaySong.src = 'https://assets.mixkit.co/music/preview/mixkit-happy-birthday-tune-1964.mp3';
-        birthdaySong.load();
-        birthdaySong.play().catch(error => {
-            console.log('備用音樂源也無法自動播放：', error);
-        });
-    }, { once: true });
     
     // 播放音樂
     const playPromise = birthdaySong.play();
@@ -189,6 +195,7 @@ function resetApp() {
     // 停止音樂
     birthdaySong.pause();
     birthdaySong.currentTime = 0;
+    musicStarted = false;
     
     // 重置願望
     wishes.length = 0;
@@ -201,6 +208,11 @@ function resetApp() {
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
     });
+    
+    // 重置流星遊戲界面
+    document.getElementById('game-intro').style.display = 'block';
+    document.getElementById('game-play').style.display = 'none';
+    document.getElementById('game-complete').style.display = 'none';
     
     // 重置蠟燭
     document.querySelectorAll('.blow-flame').forEach(flame => {
@@ -240,19 +252,34 @@ function checkAllCandlesExtinguished() {
     }
 }
 
-// 流星遊戲相關函數
-function initShootingStarsGame() {
+// 準備流星遊戲
+function prepareShootingStarsGame() {
     // 重置分數
     starScore = 0;
     totalStars = wishes.length;
     
-    updateScoreDisplay();
+    // 更新總共的願望數量
+    document.getElementById('total-stars').textContent = totalStars;
+    document.getElementById('total-stars-playing').textContent = totalStars;
+    document.getElementById('score').textContent = 0;
     
-    // 清除之前的流星
-    clearShootingStars();
+    // 顯示遊戲介紹，隱藏遊戲畫面和完成畫面
+    document.getElementById('game-intro').style.display = 'block';
+    document.getElementById('game-play').style.display = 'none';
+    document.getElementById('game-complete').style.display = 'none';
     
     // 創建背景星星
     createBackgroundStars();
+}
+
+// 開始流星遊戲
+function startShootingStarsGame() {
+    // 隱藏介紹，顯示遊戲畫面
+    document.getElementById('game-intro').style.display = 'none';
+    document.getElementById('game-play').style.display = 'block';
+    
+    // 清除之前的流星
+    clearShootingStars();
     
     // 開始發射流星
     shootingStarsInterval = setInterval(() => {
@@ -274,11 +301,16 @@ function clearShootingStars() {
     }
     
     // 清除所有流星元素
-    const container = document.getElementById('shooting-stars-container');
-    container.innerHTML = '';
+    const stars = document.querySelectorAll('.shooting-star');
+    stars.forEach(star => star.remove());
 }
 
 function createBackgroundStars() {
+    // 清除現有的背景星星
+    const existingStars = document.querySelectorAll('.tiny-star');
+    existingStars.forEach(star => star.remove());
+    
+    // 創建新的背景星星
     const container = document.getElementById('shooting-stars-container');
     const starsCount = 100;
     
@@ -408,28 +440,15 @@ function collectStar(starElement, wish) {
 
 function updateScoreDisplay() {
     document.getElementById('score').textContent = starScore;
-    document.getElementById('total-stars').textContent = totalStars;
 }
 
 function showGameCompleteMessage() {
     // 清除流星生成
     clearShootingStars();
     
-    // 顯示完成遊戲的信息
-    const container = document.getElementById('shooting-stars-container');
-    
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('game-instructions');
-    messageDiv.style.position = 'absolute';
-    messageDiv.style.top = '50%';
-    messageDiv.style.left = '50%';
-    messageDiv.style.transform = 'translate(-50%, -50%)';
-    messageDiv.innerHTML = `
-        <h2>願望全部收集完成！</h2>
-        <p>我會盡力幫你實現這些願望 ❤️</p>
-    `;
-    
-    container.appendChild(messageDiv);
+    // 隱藏遊戲畫面，顯示完成畫面
+    document.getElementById('game-play').style.display = 'none';
+    document.getElementById('game-complete').style.display = 'block';
     
     // 創建特效
     createCelebrationEffect();
