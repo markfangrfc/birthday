@@ -608,4 +608,27 @@ h2 {
     #countdown-number {
         font-size: 8rem;
     }
+}
+
+#click-to-blow {
+    background-color: #e74c3c;
+    animation: pulse 1.5s infinite alternate;
+    box-shadow: 0 0 15px rgba(231, 76, 60, 0.7);
+}
+
+#click-to-blow:hover {
+    background-color: #c0392b;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 15px rgba(231, 76, 60, 0.8);
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.5);
+    }
+    100% {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
+    }
 } 

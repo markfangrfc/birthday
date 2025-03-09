@@ -5,11 +5,13 @@ let analyser;
 let dataArray;
 let microphoneActive = false;
 let blowDetectionInterval;
+let clickToBlowTimeout; // 點擊熄滅選項的計時器
 
 // 麥克風敏感度設置
 const BLOW_THRESHOLD = 50; // 吹氣檢測閾值 (降低閾值，使更小的聲音也能觸發)
 const BLOW_DURATION = 400; // 持續吹氣時間（毫秒）(縮短時間，使蠟燭更快熄滅)
 const VOLUME_MULTIPLIER = 8; // 音量顯示倍數 (增加倍數，使音量顯示更明顯)
+const CLICK_OPTION_DELAY = 10000; // 10秒後顯示點擊選項
 
 // DOM 載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {
@@ -39,6 +41,9 @@ async function toggleMicrophone() {
             // 開始監聽吹氣
             startBlowDetection();
             
+            // 設置計時器，10秒後顯示點擊選項
+            setupClickOption();
+            
             microphoneActive = true;
         } catch (error) {
             console.error('無法訪問麥克風:', error);
@@ -58,8 +63,78 @@ async function toggleMicrophone() {
         startMicButton.textContent = '開始吹蠟燭';
         startMicButton.classList.remove('active');
         
+        // 清除點擊選項
+        clearClickOption();
+        
         microphoneActive = false;
     }
+}
+
+// 設置點擊選項計時器
+function setupClickOption() {
+    // 清除現有計時器
+    clearClickOption();
+    
+    // 檢查是否已有點擊選項按鈕
+    const existingButton = document.getElementById('click-to-blow');
+    if (existingButton) {
+        existingButton.remove();
+    }
+    
+    // 設置新計時器
+    clickToBlowTimeout = setTimeout(() => {
+        // 創建點擊熄滅按鈕
+        const clickButton = document.createElement('button');
+        clickButton.id = 'click-to-blow';
+        clickButton.className = 'button';
+        clickButton.innerHTML = '點擊熄滅蠟燭 <i class="fas fa-fire-extinguisher"></i>';
+        clickButton.style.marginTop = '20px';
+        
+        // 添加點擊事件
+        clickButton.addEventListener('click', () => {
+            extinguishAllCandles();
+        });
+        
+        // 添加到DOM
+        const instructionsDiv = document.querySelector('.blow-instructions');
+        instructionsDiv.appendChild(clickButton);
+    }, CLICK_OPTION_DELAY);
+}
+
+// 清除點擊選項計時器
+function clearClickOption() {
+    if (clickToBlowTimeout) {
+        clearTimeout(clickToBlowTimeout);
+        clickToBlowTimeout = null;
+    }
+}
+
+// 點擊熄滅所有蠟燭
+function extinguishAllCandles() {
+    const flames = document.querySelectorAll('.blow-flame');
+    let delay = 0;
+    
+    // 依次熄滅每個蠟燭，添加延遲效果
+    flames.forEach((flame, index) => {
+        setTimeout(() => {
+            // 熄滅火焰
+            flame.classList.add('extinguished');
+            
+            // 顯示煙霧
+            const smokeId = flame.id.replace('flame', 'smoke');
+            document.getElementById(smokeId).classList.add('active');
+            
+            // 如果是最後一個蠟燭，檢查所有蠟燭是否熄滅
+            if (index === flames.length - 1) {
+                setTimeout(() => {
+                    stopMicrophone();
+                    checkAllCandlesExtinguished();
+                }, 500);
+            }
+        }, delay);
+        
+        delay += 300; // 每個蠟燭熄滅間隔300毫秒
+    });
 }
 
 // 初始化麥克風
@@ -91,6 +166,9 @@ function stopMicrophone() {
         blowDetectionInterval = null;
     }
     
+    // 清除點擊選項計時器
+    clearClickOption();
+    
     if (microphone && microphone.mediaStream) {
         microphone.mediaStream.getTracks().forEach(track => track.stop());
     }
@@ -101,6 +179,12 @@ function stopMicrophone() {
     
     // 重置音量顯示
     document.getElementById('volume-level').style.width = '0%';
+    
+    // 移除點擊熄滅按鈕
+    const clickButton = document.getElementById('click-to-blow');
+    if (clickButton) {
+        clickButton.remove();
+    }
 }
 
 // 開始吹氣檢測
