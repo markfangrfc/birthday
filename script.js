@@ -3,6 +3,10 @@ let currentSection = 'countdown';
 const wishes = [];
 let countdownInterval;
 let birthdaySong;
+let shootingStarsInterval;
+let starScore = 0;
+let totalStars = 0;
+let starSound;
 
 // DOM 載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {
@@ -29,6 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
         switchSection('wish-section', 'blow-section');
     });
     
+    document.getElementById('start-shooting-stars').addEventListener('click', () => {
+        switchSection('success-section', 'shooting-stars-section');
+        initShootingStarsGame();
+    });
+    
     document.getElementById('restart-button').addEventListener('click', () => {
         resetApp();
     });
@@ -40,6 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteWish(index);
         }
     });
+    
+    // 初始化流星音效
+    starSound = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-fairy-glitter-sweep-1826.mp3');
+    starSound.volume = 0.4;
 });
 
 // 開始倒數計時
@@ -171,6 +184,9 @@ function resetApp() {
     wishes.length = 0;
     updateWishList();
     
+    // 清空流星
+    clearShootingStars();
+    
     // 重置所有區塊
     document.querySelectorAll('.section').forEach(section => {
         section.classList.remove('active');
@@ -211,5 +227,241 @@ function checkAllCandlesExtinguished() {
         setTimeout(() => {
             switchSection('blow-section', 'success-section');
         }, 2000);
+    }
+}
+
+// 流星遊戲相關函數
+function initShootingStarsGame() {
+    // 重置分數
+    starScore = 0;
+    totalStars = wishes.length;
+    
+    updateScoreDisplay();
+    
+    // 清除之前的流星
+    clearShootingStars();
+    
+    // 創建背景星星
+    createBackgroundStars();
+    
+    // 開始發射流星
+    shootingStarsInterval = setInterval(() => {
+        if (wishes.length > 0) {
+            const randomIndex = Math.floor(Math.random() * wishes.length);
+            const wish = wishes[randomIndex];
+            createShootingStar(wish);
+        } else {
+            clearInterval(shootingStarsInterval);
+        }
+    }, 2000); // 每2秒發射一顆流星
+}
+
+function clearShootingStars() {
+    // 清除定時器
+    if (shootingStarsInterval) {
+        clearInterval(shootingStarsInterval);
+        shootingStarsInterval = null;
+    }
+    
+    // 清除所有流星元素
+    const container = document.getElementById('shooting-stars-container');
+    container.innerHTML = '';
+}
+
+function createBackgroundStars() {
+    const container = document.getElementById('shooting-stars-container');
+    const starsCount = 100;
+    
+    for (let i = 0; i < starsCount; i++) {
+        const star = document.createElement('div');
+        star.classList.add('tiny-star');
+        
+        // 隨機位置
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.left = `${Math.random() * 100}%`;
+        
+        // 隨機大小
+        const size = Math.random() * 3 + 1;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        
+        // 隨機閃爍
+        star.style.animation = `starTwinkle ${Math.random() * 3 + 2}s infinite alternate`;
+        
+        container.appendChild(star);
+    }
+}
+
+function createShootingStar(wish) {
+    const container = document.getElementById('shooting-stars-container');
+    const shootingStar = document.createElement('div');
+    shootingStar.classList.add('shooting-star');
+    
+    // 創建流星的尾巴和頭部
+    const starTail = document.createElement('div');
+    starTail.classList.add('star-tail');
+    
+    const starHead = document.createElement('div');
+    starHead.classList.add('star-head');
+    
+    // 添加願望文字
+    const wishText = document.createElement('div');
+    wishText.classList.add('star-wish');
+    wishText.textContent = wish;
+    
+    // 添加閃光效果元素
+    const sparkle = document.createElement('div');
+    sparkle.classList.add('star-sparkle');
+    
+    // 組合流星元素
+    shootingStar.appendChild(starTail);
+    shootingStar.appendChild(starHead);
+    shootingStar.appendChild(wishText);
+    shootingStar.appendChild(sparkle);
+    
+    // 設置隨機起始位置和角度
+    const startX = -150; // 從畫面左側開始
+    const startY = Math.random() * window.innerHeight * 0.7;
+    const angle = Math.random() * 20 - 10; // -10度到10度的隨機角度
+    
+    shootingStar.style.left = `${startX}px`;
+    shootingStar.style.top = `${startY}px`;
+    shootingStar.style.transform = `rotate(${angle}deg)`;
+    
+    // 添加到容器
+    container.appendChild(shootingStar);
+    
+    // 設置點擊事件
+    shootingStar.addEventListener('click', () => collectStar(shootingStar, wish));
+    
+    // 設置流星動畫
+    const duration = Math.random() * 3000 + 4000; // 4-7秒
+    
+    // 計算終點位置
+    const endX = window.innerWidth + 150;
+    const endY = startY + (endX - startX) * Math.tan(angle * Math.PI / 180);
+    
+    // 開始動畫
+    const animation = shootingStar.animate([
+        { left: `${startX}px`, top: `${startY}px` },
+        { left: `${endX}px`, top: `${endY}px` }
+    ], {
+        duration: duration,
+        easing: 'linear',
+        fill: 'forwards'
+    });
+    
+    // 動畫結束後移除流星
+    animation.onfinish = () => {
+        shootingStar.remove();
+    };
+}
+
+function collectStar(starElement, wish) {
+    // 停止移動動畫
+    const animations = starElement.getAnimations();
+    animations.forEach(animation => animation.cancel());
+    
+    // 播放收集動畫
+    starElement.classList.add('star-collect-animation');
+    
+    // 播放閃光動畫
+    const sparkle = starElement.querySelector('.star-sparkle');
+    sparkle.classList.add('star-sparkle-animation');
+    
+    // 播放音效
+    if (starSound) {
+        starSound.currentTime = 0;
+        starSound.play();
+    }
+    
+    // 更新分數
+    starScore++;
+    updateScoreDisplay();
+    
+    // 從願望列表中移除
+    const wishIndex = wishes.indexOf(wish);
+    if (wishIndex !== -1) {
+        wishes.splice(wishIndex, 1);
+    }
+    
+    // 動畫結束後移除流星
+    setTimeout(() => {
+        starElement.remove();
+        
+        // 檢查遊戲是否結束
+        if (starScore >= totalStars) {
+            setTimeout(showGameCompleteMessage, 1000);
+        }
+    }, 600);
+}
+
+function updateScoreDisplay() {
+    document.getElementById('score').textContent = starScore;
+    document.getElementById('total-stars').textContent = totalStars;
+}
+
+function showGameCompleteMessage() {
+    // 清除流星生成
+    clearShootingStars();
+    
+    // 顯示完成遊戲的信息
+    const container = document.getElementById('shooting-stars-container');
+    
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('game-instructions');
+    messageDiv.style.position = 'absolute';
+    messageDiv.style.top = '50%';
+    messageDiv.style.left = '50%';
+    messageDiv.style.transform = 'translate(-50%, -50%)';
+    messageDiv.innerHTML = `
+        <h2>願望全部收集完成！</h2>
+        <p>我會盡力幫你實現這些願望 ❤️</p>
+    `;
+    
+    container.appendChild(messageDiv);
+    
+    // 創建特效
+    createCelebrationEffect();
+}
+
+function createCelebrationEffect() {
+    const container = document.getElementById('shooting-stars-container');
+    const starsCount = 50;
+    
+    for (let i = 0; i < starsCount; i++) {
+        setTimeout(() => {
+            const star = document.createElement('div');
+            star.classList.add('star-head');
+            star.style.position = 'absolute';
+            star.style.top = '50%';
+            star.style.left = '50%';
+            star.style.width = '10px';
+            star.style.height = '10px';
+            
+            container.appendChild(star);
+            
+            // 隨機方向擴散
+            const angle = Math.random() * Math.PI * 2;
+            const distance = Math.random() * 300 + 100;
+            const duration = Math.random() * 1500 + 1000;
+            
+            const endX = Math.cos(angle) * distance;
+            const endY = Math.sin(angle) * distance;
+            
+            const animation = star.animate([
+                { transform: 'translate(-50%, -50%) scale(0.5)', opacity: 0 },
+                { transform: 'translate(-50%, -50%) scale(1.5)', opacity: 1, offset: 0.1 },
+                { transform: `translate(calc(-50% + ${endX}px), calc(-50% + ${endY}px)) scale(0.1)`, opacity: 0 }
+            ], {
+                duration: duration,
+                easing: 'ease-out',
+                fill: 'forwards'
+            });
+            
+            animation.onfinish = () => {
+                star.remove();
+            };
+        }, i * 100);
     }
 } 
