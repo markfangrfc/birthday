@@ -309,8 +309,10 @@ h2 {
 
 /* 吹蠟燭區塊樣式 */
 .blow-instructions {
-    margin-bottom: 30px;
+    margin-bottom: 50px;
     text-align: center;
+    position: relative;
+    z-index: 10;
 }
 
 #volume-meter {
@@ -319,6 +321,7 @@ h2 {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 10px;
     margin: 20px auto;
+    margin-bottom: 40px;
     overflow: hidden;
     position: relative;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -631,4 +634,14 @@ h2 {
         transform: scale(1.05);
         box-shadow: 0 0 20px rgba(231, 76, 60, 0.8);
     }
+}
+
+/* 重新調整吹蠟燭區塊的整體布局 */
+#blow-section .cake-container {
+    margin-top: 30px;
+}
+
+/* 確保進度條在蠟燭上方有足夠空間 */
+#blow-section .blow-instructions {
+    margin-bottom: 80px;
 } 

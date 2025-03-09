@@ -90,6 +90,16 @@ function playBirthdaySong() {
     // 確保音樂從頭開始播放
     birthdaySong.currentTime = 0;
     
+    // 檢查音樂源是否可用，如果不可用則使用備用源
+    birthdaySong.addEventListener('error', () => {
+        console.log('主要音樂源無法播放，切換到備用源');
+        birthdaySong.src = 'https://assets.mixkit.co/music/preview/mixkit-happy-birthday-tune-1964.mp3';
+        birthdaySong.load();
+        birthdaySong.play().catch(error => {
+            console.log('備用音樂源也無法自動播放：', error);
+        });
+    }, { once: true });
+    
     // 播放音樂
     const playPromise = birthdaySong.play();
     
