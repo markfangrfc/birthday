@@ -847,4 +847,22 @@ h2 {
     width: 100%;
     height: 100%;
     z-index: 5;
+}
+
+#show-messages {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 16px;
+    margin-top: 20px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#show-messages:hover {
+    background-color: #45a049;
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 } 

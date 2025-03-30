@@ -660,17 +660,31 @@ function showGameCompleteMessage() {
     // 隱藏遊戲畫面
     document.getElementById('game-play').style.display = 'none';
     
-    // 隱藏遊戲完成訊息
-    document.getElementById('game-complete').style.display = 'none';
+    // 顯示遊戲完成訊息和進入留言牆按鈕
+    const gameComplete = document.getElementById('game-complete');
+    gameComplete.style.display = 'block';
+    gameComplete.innerHTML = `
+        <div class="game-success-message">
+            <h2>願望全部收集完成！</h2>
+            <p>你的願望一定會實現的 ❤</p>
+            <button id="show-messages" class="button">查看生日祝福</button>
+        </div>
+    `;
     
-    // 顯示留言牆區域
-    const messageWallSection = document.getElementById('message-wall-section');
-    messageWallSection.style.display = 'block';
+    // 添加按鈕點擊事件
+    document.getElementById('show-messages').addEventListener('click', () => {
+        // 隱藏遊戲完成訊息
+        gameComplete.style.display = 'none';
+        
+        // 顯示留言牆
+        const messageWallSection = document.getElementById('message-wall-section');
+        messageWallSection.style.display = 'block';
+        
+        // 載入並顯示留言
+        loadMessages();
+    });
     
-    // 載入並顯示留言
-    loadMessages();
-    
-    console.log('遊戲完成，留言牆已顯示');
+    console.log('遊戲完成，等待用戶點擊查看留言');
 }
 
 function createCelebrationEffect() {
