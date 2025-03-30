@@ -655,15 +655,18 @@ function updateScoreDisplay() {
 }
 
 function showGameCompleteMessage() {
-    // 清除流星生成
-    clearShootingStars();
+    console.log('顯示遊戲完成訊息');
     
-    // 隱藏遊戲畫面，顯示完成畫面
+    // 隱藏遊戲畫面
     document.getElementById('game-play').style.display = 'none';
-    document.getElementById('game-complete').style.display = 'block';
     
-    // 創建特效
-    createCelebrationEffect();
+    // 顯示留言牆區域
+    document.getElementById('message-wall-section').style.display = 'block';
+    
+    // 載入並顯示留言
+    loadMessages();
+    
+    console.log('遊戲完成，留言牆已顯示');
 }
 
 function createCelebrationEffect() {

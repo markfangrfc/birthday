@@ -826,4 +826,14 @@ h2 {
         font-size: 1em;
         padding: 15px;
     }
+}
+
+#message-wall-section {
+    display: none;  /* 初始時隱藏 */
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 20px 0;
 } 
