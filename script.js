@@ -660,8 +660,12 @@ function showGameCompleteMessage() {
     // 隱藏遊戲畫面
     document.getElementById('game-play').style.display = 'none';
     
+    // 隱藏遊戲完成訊息
+    document.getElementById('game-complete').style.display = 'none';
+    
     // 顯示留言牆區域
-    document.getElementById('message-wall-section').style.display = 'block';
+    const messageWallSection = document.getElementById('message-wall-section');
+    messageWallSection.style.display = 'block';
     
     // 載入並顯示留言
     loadMessages();
