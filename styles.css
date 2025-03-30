@@ -758,4 +758,72 @@ h2 {
         transform: translate(var(--tx), var(--ty)) scale(0.1);
         opacity: 0;
     }
+}
+
+/* 留言牆樣式 */
+.message-wall-container {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    position: relative;
+}
+
+.message-wall {
+    height: 400px;
+    overflow: hidden;
+    position: relative;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.message-scroll {
+    position: absolute;
+    width: 100%;
+    animation: scroll 30s linear infinite;
+}
+
+.message-scroll.paused {
+    animation-play-state: paused;
+}
+
+.message-item {
+    padding: 20px;
+    margin: 10px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    font-size: 1.1em;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateY(100%);
+    }
+    100% {
+        transform: translateY(-100%);
+    }
+}
+
+/* 響應式設計 */
+@media (max-width: 768px) {
+    .message-wall-container {
+        width: 90%;
+    }
+    
+    .message-wall {
+        height: 300px;
+    }
+    
+    .message-item {
+        font-size: 1em;
+        padding: 15px;
+    }
 } 

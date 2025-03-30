@@ -10,6 +10,10 @@ let totalStars = 0;
 let starSound;
 let musicStarted = false;
 
+// 留言牆功能
+let messages = [];
+let messageScrollInterval;
+
 // DOM 載入完成後執行
 document.addEventListener('DOMContentLoaded', () => {
     // 初始化音樂
@@ -74,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 初始檢查 - 調試用
     console.log('DOM載入完成，初始化已執行');
+
+    // 在頁面載入時載入留言
+    loadMessages();
 });
 
 // 設置願望列表的事件處理
@@ -698,4 +705,53 @@ function createCelebrationEffect() {
             };
         }, i * 100);
     }
-} 
+}
+
+async function loadMessages() {
+    try {
+        const response = await fetch('/messages');
+        const files = await response.json();
+        
+        for (const file of files) {
+            const messageResponse = await fetch(`/messages/${file}`);
+            const content = await messageResponse.text();
+            messages.push(content);
+        }
+        
+        updateMessageWall();
+    } catch (error) {
+        console.error('載入留言失敗:', error);
+    }
+}
+
+function updateMessageWall() {
+    const messageScroll = document.getElementById('messageScroll');
+    messageScroll.innerHTML = '';
+    
+    // 重複訊息以製造無限滾動效果
+    const repeatedMessages = [...messages, ...messages];
+    
+    repeatedMessages.forEach(msg => {
+        const div = document.createElement('div');
+        div.className = 'message-item';
+        div.textContent = msg;
+        messageScroll.appendChild(div);
+    });
+}
+
+// 監聽觸控/滑鼠事件
+document.querySelector('.message-wall').addEventListener('mousedown', () => {
+    document.getElementById('messageScroll').classList.add('paused');
+});
+
+document.querySelector('.message-wall').addEventListener('mouseup', () => {
+    document.getElementById('messageScroll').classList.remove('paused');
+});
+
+document.querySelector('.message-wall').addEventListener('touchstart', () => {
+    document.getElementById('messageScroll').classList.add('paused');
+});
+
+document.querySelector('.message-wall').addEventListener('touchend', () => {
+    document.getElementById('messageScroll').classList.remove('paused');
+}); 
