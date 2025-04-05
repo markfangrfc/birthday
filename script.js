@@ -1306,6 +1306,34 @@ function showScoreNotification(score) {
   }, 1500);
 }
 
+// 顯示信封祝福信息
+function showMessage(cardId) {
+  const fullscreenContainer = document.getElementById("fullscreen-message");
+  const messageTitle = document.getElementById("message-title");
+  const messageText = document.getElementById("message-text");
+
+  // 將cardId轉換為數字
+  const id = parseInt(cardId);
+
+  // 查找對應的祝福信息
+  const message = messageContents.find((m) => m.id === id);
+
+  if (message) {
+    // 將文本中的換行符轉換為HTML的<br>
+    const formattedText = message.text.replace(/\n/g, "<br>");
+
+    // 設置標題和內容
+    messageTitle.textContent = message.title;
+    messageText.innerHTML = formattedText;
+
+    // 顯示全屏閱讀區塊
+    fullscreenContainer.classList.add("active");
+
+    // 防止背景滾動
+    document.body.style.overflow = "hidden";
+  }
+}
+
 // 發送給自己的留言
 function sendSelfMessage() {
   const messageInput = document.getElementById("self-message-input");
