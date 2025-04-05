@@ -35,6 +35,15 @@ body {
     visibility: visible;
 }
 
+/* 允許祝福留言牆頁面滾動 */
+#flappy-section.active {
+    position: absolute;
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+    padding-bottom: 50px;
+}
+
 .button {
     background-color: #ff6b6b;
     color: white;
@@ -1287,15 +1296,31 @@ h2 {
     .envelopes-container {
         flex-direction: column;
         align-items: center;
-        gap: 40px;
-        margin: 30px auto;
-        max-width: 280px;
+        gap: 8px;
+        margin: 5px auto;
+        max-width: 200px;
+    }
+    
+    /* 允許祝福留言牆頁面滾動 */
+    #flappy-section.active {
+        position: absolute;
+        height: auto;
+        min-height: 100%;
+        overflow-y: auto;
+        padding: 5px 15px 20px;
+    }
+    
+    /* 祝福信箱標題縮小間距 */
+    #flappy-section h2 {
+        margin: 2px 0 5px;
+        font-size: 1.4rem;
     }
     
     .envelope {
-        width: 280px;
-        height: 140px;
+        width: 200px;
+        height: 90px;
         margin-bottom: 0;
+        transform: scale(0.75);
     }
     
     .envelope-content {
@@ -1303,7 +1328,7 @@ h2 {
     }
     
     .sender {
-        font-size: 1.2rem;
+        font-size: 1rem;
     }
     
     .fullscreen-content {
@@ -1356,7 +1381,47 @@ h2 {
     }
     
     .self-message-form {
-        margin-top: 40px;
+        width: 80%;
+        padding: 8px;
+        margin: 8px auto 5px;
+        transform: scale(0.85);
+    }
+    
+    .self-message-form h3 {
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+    
+    /* 重新開始按鈕上方間距縮小 */
+    #restart-all-button {
+        margin-top: 10px;
+        padding: 8px 20px;
+        font-size: 14px;
+    }
+    
+    /* 自我留言表單樣式調整 */
+    .message-input-container {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    #self-message-input {
+        min-height: 50px;
+        padding: 8px;
+        font-size: 14px;
+    }
+
+    #send-self-message {
+        align-self: center;
+        width: 100%;
+        height: 36px;
+        margin-top: 3px;
+        font-size: 14px;
+    }
+
+    .message-status {
+        font-size: 13px;
+        min-height: 18px;
     }
 }
 
@@ -1441,36 +1506,39 @@ h2 {
 @media (max-width: 768px) {
     /* 自我留言表單適配移動設備 */
     .self-message-form {
-        width: 90%;
-        padding: 15px;
-        margin: 15px auto 5px;
+        width: 80%;
+        padding: 8px;
+        margin: 8px auto 5px;
+        transform: scale(0.85);
     }
 
     .self-message-form h3 {
-        font-size: 1.3rem;
-        margin-bottom: 10px;
+        font-size: 1rem;
+        margin-bottom: 4px;
     }
 
     .message-input-container {
         flex-direction: column;
-        gap: 8px;
+        gap: 6px;
     }
 
     #self-message-input {
-        min-height: 60px;
-        padding: 10px;
+        min-height: 50px;
+        padding: 8px;
         font-size: 14px;
     }
 
     #send-self-message {
         align-self: center;
         width: 100%;
-        height: 44px;
-        margin-top: 5px;
+        height: 36px;
+        margin-top: 3px;
+        font-size: 14px;
     }
 
     .message-status {
-        font-size: 14px;
-        min-height: 22px;
+        font-size: 13px;
+        min-height: 18px;
+        margin-top: 2px;
     }
 } 

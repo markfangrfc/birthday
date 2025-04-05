@@ -115,17 +115,52 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("start-flappy-button")
     .addEventListener("click", startFlappyGame);
 
-  // 重新開始按鈕
-  document
-    .getElementById("restart-all-button")
-    .addEventListener("click", function () {
-      resetApp();
-    });
-
   // 處理發送給自己的留言
   document
     .getElementById("send-self-message")
     .addEventListener("click", sendSelfMessage);
+
+  // 初始化信封點擊功能
+  const envelopes = document.querySelectorAll(".envelope");
+  envelopes.forEach((envelope) => {
+    envelope.addEventListener("click", function () {
+      const cardId = this.getAttribute("data-card");
+      showMessage(cardId);
+    });
+  });
+
+  // 關閉全屏閱讀按鈕
+  document
+    .getElementById("close-message")
+    .addEventListener("click", function () {
+      const fullscreenContainer = document.getElementById("fullscreen-message");
+      fullscreenContainer.classList.remove("active");
+      document.body.style.overflow = "";
+    });
+
+  // 點擊背景時關閉全屏閱讀
+  document
+    .getElementById("fullscreen-message")
+    .addEventListener("click", function (event) {
+      if (event.target === this) {
+        this.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+    });
+
+  // ESC鍵關閉全屏閱讀
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      const fullscreenContainer = document.getElementById("fullscreen-message");
+      if (
+        fullscreenContainer &&
+        fullscreenContainer.classList.contains("active")
+      ) {
+        fullscreenContainer.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+    }
+  });
 });
 
 // 設置願望列表的事件處理
@@ -1239,70 +1274,6 @@ function endFlappyGame(success) {
     }, 2000);
   }
 }
-
-// 卡片相關功能
-document.addEventListener("DOMContentLoaded", function () {
-  // 初始化信封點擊事件
-  const envelopes = document.querySelectorAll(".envelope");
-  const fullscreenContainer = document.getElementById("fullscreen-message");
-  const messageTitle = document.getElementById("message-title");
-  const messageText = document.getElementById("message-text");
-  const closeButton = document.getElementById("close-message");
-
-  // 點擊信封打開全屏閱讀模式
-  envelopes.forEach((envelope) => {
-    envelope.addEventListener("click", function () {
-      const cardId = parseInt(this.getAttribute("data-card"));
-      const message = messageContents.find((m) => m.id === cardId);
-
-      if (message) {
-        // 將文本中的換行符轉換為HTML的<br>
-        const formattedText = message.text.replace(/\n/g, "<br>");
-
-        messageTitle.textContent = message.title;
-        messageText.innerHTML = formattedText;
-        fullscreenContainer.classList.add("active");
-
-        // 防止滾動背景
-        document.body.style.overflow = "hidden";
-      }
-    });
-  });
-
-  // 關閉按鈕事件
-  closeButton.addEventListener("click", function () {
-    fullscreenContainer.classList.remove("active");
-
-    // 恢復背景滾動
-    document.body.style.overflow = "";
-  });
-
-  // 點擊背景也可以關閉
-  fullscreenContainer.addEventListener("click", function (event) {
-    if (event.target === fullscreenContainer) {
-      fullscreenContainer.classList.remove("active");
-      document.body.style.overflow = "";
-    }
-  });
-
-  // ESC鍵關閉全屏閱讀
-  document.addEventListener("keydown", function (event) {
-    if (
-      event.key === "Escape" &&
-      fullscreenContainer.classList.contains("active")
-    ) {
-      fullscreenContainer.classList.remove("active");
-      document.body.style.overflow = "";
-    }
-  });
-
-  // 重新開始按鈕
-  document
-    .getElementById("restart-all-button")
-    .addEventListener("click", function () {
-      resetApp();
-    });
-});
 
 // 顯示得分通知
 function showScoreNotification(score) {
