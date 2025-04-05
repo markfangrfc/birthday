@@ -765,23 +765,55 @@ h2 {
     position: relative;
     width: 100%;
     height: 70vh;
-    background-color: #87CEEB;
+    background: linear-gradient(to bottom, #87CEEB, #1E90FF); /* 漸變天空背景 */
     border: 2px solid #333;
     border-radius: 10px;
     overflow: hidden;
     margin: 20px auto;
     max-width: 800px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* 添加地面元素 */
+.flappy-game-container::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 10%;
+    background-color: #8B4513; /* 棕色地面 */
+    border-top: 3px solid #654321;
+}
+
+/* 添加雲朵裝飾 */
+.flappy-game-container::before {
+    content: '';
+    position: absolute;
+    width: 100px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50px;
+    top: 20%;
+    left: 10%;
+    box-shadow: 
+        120px 30px 0 20px rgba(255, 255, 255, 0.6),
+        240px -15px 0 10px rgba(255, 255, 255, 0.7),
+        350px 40px 0 15px rgba(255, 255, 255, 0.5);
+    animation: cloudMove 30s linear infinite;
+}
+
+@keyframes cloudMove {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(100%); }
 }
 
 #flappy-character {
     position: absolute;
     width: 60px;
     height: 60px;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="%23FFDD00"/><circle cx="40" cy="40" r="8" fill="%23111"/><path d="M 60,40 Q 80,20 70,50 Z" fill="%23FF8800"/><path d="M 40,70 Q 50,80 60,70 Z" fill="%23FF6600" transform="rotate(5, 50, 50)"/></svg>');
-    background-size: contain;
-    background-repeat: no-repeat;
     left: 20%;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
     transition: transform 0.2s ease;
     z-index: 10;
@@ -974,4 +1006,95 @@ h2 {
         transform: scale(1.05);
         box-shadow: 0 0 25px rgba(76, 175, 80, 0.8);
     }
+}
+
+/* 小鳥跳躍動畫 */
+.flappy-jump {
+    animation: jumpEffect 0.3s ease-out;
+}
+
+@keyframes jumpEffect {
+    0% {
+        transform: translateY(-50%) scale(1) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-50%) scale(1.1) rotate(-10deg);
+    }
+    100% {
+        transform: translateY(-50%) scale(1) rotate(0deg);
+    }
+}
+
+/* 小鳥碰撞動畫 */
+.flappy-crash {
+    animation: crashEffect 0.5s ease-in-out forwards;
+}
+
+@keyframes crashEffect {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+        opacity: 1;
+    }
+    25% {
+        transform: translateY(-50%) rotate(20deg) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%) rotate(90deg);
+        opacity: 0.6;
+    }
+}
+
+/* 小鳥成功動畫 */
+.flappy-success {
+    animation: successEffect 1s ease-in-out infinite alternate;
+}
+
+@keyframes successEffect {
+    0% {
+        transform: translateY(-50%) scale(1);
+        filter: brightness(1);
+    }
+    100% {
+        transform: translateY(-50%) scale(1.2);
+        filter: brightness(1.2);
+    }
+}
+
+/* 遊戲目標樣式 */
+.game-goal {
+    font-size: 1.2rem;
+    margin: 10px 0;
+    color: #FF6B6B;
+    font-weight: bold;
+}
+
+.highlight {
+    color: #4caf50;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+/* 分數通知樣式 */
+.score-notification {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background-color: rgba(76, 175, 80, 0.8);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    z-index: 20;
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.score-notification.show {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
 } 

@@ -13,9 +13,9 @@ let musicStarted = false;
 // Flappy Bird 遊戲變量
 let flappyGameActive = false;
 let flappyScore = 0;
-let flappyGravity = 0.5;
+let flappyGravity = 0.0025; // 大幅降低重力效果 (再降低10倍)
 let flappyVelocity = 0;
-let flappyPosition = 50;
+let flappyPosition = 40; // 設定初始位置在畫面中間偏上位置
 let pipes = [];
 let flappyAnimationFrame;
 let pipeGenerationInterval;
@@ -818,36 +818,85 @@ function createCelebrationEffect() {
 
 // 遊戲開始函數
 function startFlappyGame() {
+  console.log("開始Flappy Bird遊戲");
   document.getElementById("flappy-intro").style.display = "none";
   document.getElementById("flappy-game").style.display = "block";
   document.getElementById("flappy-complete").style.display = "none";
 
   const flappyCharacter = document.getElementById("flappy-character");
-  const gameArea = document.getElementById("flappy-game-area");
+  const gameContainer = document.querySelector(".flappy-game-container");
 
   // 重置遊戲狀態
   flappyGameActive = true;
   flappyScore = 0;
-  flappyVelocity = 0;
-  flappyPosition = 50;
+  flappyVelocity = -0.1; // 給予非常輕微的向上初始速度，讓小鳥緩慢下降
+  flappyPosition = 40; // 設定初始位置在畫面中間偏上位置
   pipes = [];
   updateFlappyScore();
+
+  // 設定使用main.png作為遊戲主角
+  flappyCharacter.style.backgroundImage = "url('main.png')";
+  flappyCharacter.style.backgroundSize = "contain";
+  flappyCharacter.style.backgroundRepeat = "no-repeat";
+  flappyCharacter.style.backgroundColor = "transparent"; // 移除黃色背景
+  // 移除原有的CSS陰影效果(眼睛和嘴巴)
+  flappyCharacter.style.boxShadow = "none";
+
+  // 確保小鳥可見且位於正確位置
+  flappyCharacter.style.display = "block";
+  flappyCharacter.style.top = flappyPosition + "%";
+  flappyCharacter.style.transform = "translateY(-50%)";
 
   // 移除現有的管道
   const existingPipes = document.querySelectorAll(".pipe");
   existingPipes.forEach((pipe) => pipe.remove());
 
-  // 添加事件監聽器
-  document.addEventListener("keydown", handleFlappyJump);
-  document.addEventListener("touchstart", handleFlappyJump);
-  document.addEventListener("click", handleFlappyJump);
+  // 移除現有的事件監聽器以避免重複
+  document.removeEventListener("keydown", handleFlappyJump);
+  document.removeEventListener("touchstart", handleFlappyJump);
+  gameContainer.removeEventListener("click", handleFlappyJump);
 
-  // 開始生成管道
-  pipeGenerationInterval = setInterval(generatePipe, 1800);
+  // 添加事件監聽器 - 確保點擊事件正確綁定
+  document.addEventListener("keydown", handleFlappyJump);
+
+  // 增加提示訊息
+  console.log("綁定點擊和觸摸事件到遊戲容器");
+
+  // 移動端觸摸事件
+  gameContainer.addEventListener(
+    "touchstart",
+    function (event) {
+      event.preventDefault(); // 阻止默認行為
+      console.log("觸摸事件觸發");
+      handleFlappyJump(event);
+    },
+    { passive: false }
+  );
+
+  // 滑鼠點擊事件
+  gameContainer.addEventListener("click", function (event) {
+    event.stopPropagation(); // 阻止事件冒泡
+    console.log("點擊事件觸發");
+    handleFlappyJump(event);
+  });
+
+  // 先清除之前的間隔計時器
+  clearInterval(pipeGenerationInterval);
+
+  // 延遲更長時間後再開始生成管道
+  setTimeout(() => {
+    if (flappyGameActive) {
+      // 開始生成管道，增加時間間隔，降低難度
+      pipeGenerationInterval = setInterval(generatePipe, 1500); // 縮短管道生成間隔，加快遊戲節奏
+      generatePipe(); // 生成第一個管道
+    }
+  }, 2000); // 再延長初始等待時間
 
   // 開始遊戲循環
   cancelAnimationFrame(flappyAnimationFrame);
   flappyGameLoop();
+
+  console.log("Flappy Bird遊戲已初始化");
 }
 
 // 遊戲循環
@@ -861,8 +910,8 @@ function flappyGameLoop() {
   const flappyCharacter = document.getElementById("flappy-character");
   flappyCharacter.style.top = flappyPosition + "%";
 
-  // 旋轉角度 - 根據速度調整角度
-  const rotation = Math.min(Math.max(flappyVelocity * 5, -20), 90);
+  // 旋轉角度 - 根據速度調整角度，使用較小的旋轉效果
+  const rotation = Math.min(Math.max(flappyVelocity * 15, -10), 30);
   flappyCharacter.style.transform = `translateY(-50%) rotate(${rotation}deg)`;
 
   // 檢查碰撞
@@ -879,28 +928,50 @@ function flappyGameLoop() {
 function handleFlappyJump(event) {
   if (!flappyGameActive) return;
 
-  // 防止事件冒泡
-  event.preventDefault();
+  // 避免冒泡和預設行為
+  if (event.type === "click") {
+    event.stopPropagation();
+  }
+  if (
+    event.type === "touchstart" ||
+    event.key === " " ||
+    event.key === "ArrowUp"
+  ) {
+    event.preventDefault();
+  }
 
-  // 跳躍
-  flappyVelocity = -8;
+  console.log("小鳥跳躍");
+
+  // 跳躍 - 顯著降低跳躍力度，讓小鳥只跳約半個角色高度
+  flappyVelocity = -0.25; // 大幅降低跳躍力度，從-2降到-0.5
+
+  // 添加跳躍的視覺反饋
+  const flappyCharacter = document.getElementById("flappy-character");
+  flappyCharacter.classList.add("flappy-jump");
+
+  // 短暫之後移除動畫類
+  setTimeout(() => {
+    flappyCharacter.classList.remove("flappy-jump");
+  }, 300);
 }
 
 // 生成管道
 function generatePipe() {
   if (!flappyGameActive) return;
 
-  const gameArea = document.getElementById("flappy-game-area");
+  console.log("生成新管道");
   const gameContainer = document.querySelector(".flappy-game-container");
+  const containerWidth = gameContainer.offsetWidth;
 
   // 隨機生成缺口位置
-  const gap = 30; // 百分比
+  const gap = 35; // 百分比 (增加缺口大小，使遊戲略微簡單一些)
   const gapPosition = Math.floor(Math.random() * (70 - 30) + 15); // 15% - 85%
 
   // 創建頂部管道
   const topPipe = document.createElement("div");
   topPipe.className = "pipe pipe-top";
   topPipe.style.height = `${gapPosition}%`;
+  topPipe.style.right = "-80px"; // 確保從畫面外開始
 
   // 創建頂部管道頭部
   const topPipeHead = document.createElement("div");
@@ -911,6 +982,7 @@ function generatePipe() {
   const bottomPipe = document.createElement("div");
   bottomPipe.className = "pipe pipe-bottom";
   bottomPipe.style.height = `${100 - gapPosition - gap}%`;
+  bottomPipe.style.right = "-80px"; // 確保從畫面外開始
 
   // 創建底部管道頭部
   const bottomPipeHead = document.createElement("div");
@@ -927,6 +999,8 @@ function generatePipe() {
     bottom: bottomPipe,
     passed: false,
   });
+
+  console.log("新管道已生成");
 }
 
 // 移動管道
@@ -937,66 +1011,112 @@ function movePipes() {
 
     // 獲取目前位置
     const topPipeRect = pipe.top.getBoundingClientRect();
-    const currentRight = parseInt(pipe.top.style.right || "0");
+    let currentRight = parseInt(pipe.top.style.right || "0");
+
+    // 確保currentRight是有效數字
+    if (isNaN(currentRight)) currentRight = 0;
 
     // 移動管道
-    pipe.top.style.right = currentRight + 1 + "px";
-    pipe.bottom.style.right = currentRight + 1 + "px";
+    const newRight = currentRight + 2; // 增加速度為2px
+    pipe.top.style.right = newRight + "px";
+    pipe.bottom.style.right = newRight + "px";
 
     // 檢查是否通過了鳥兒（中心點）
     const flappyCharacter = document.getElementById("flappy-character");
     const flappyRect = flappyCharacter.getBoundingClientRect();
+    const gameContainer = document.querySelector(".flappy-game-container");
+    const containerRect = gameContainer.getBoundingClientRect();
 
-    if (!pipe.passed && topPipeRect.right < flappyRect.left) {
+    // 計算管道在畫面上的實際位置
+    const pipeLeft = containerRect.right - topPipeRect.width - newRight;
+    const flappyCenterX = flappyRect.left + flappyRect.width / 2;
+
+    if (!pipe.passed && pipeLeft < flappyCenterX) {
       pipe.passed = true;
       flappyScore++;
       updateFlappyScore();
+      console.log("通過管道，得分：", flappyScore);
 
       // 檢查是否達到勝利條件
       if (flappyScore >= 10) {
+        // 達到10分通關
         endFlappyGame(true);
+      } else {
+        // 更新得分時顯示剩餘分數提示
+        showScoreNotification(flappyScore);
       }
     }
 
     // 移除超出屏幕的管道
-    if (topPipeRect.right < 0) {
+    if (newRight > containerRect.width + 100) {
+      // 確保完全超出畫面
       pipe.top.remove();
       pipe.bottom.remove();
       pipes.splice(i, 1);
+      console.log("移除超出畫面的管道");
     }
   }
 }
 
 // 檢查碰撞
 function checkFlappyCollisions() {
+  if (!flappyGameActive) return;
+
   const flappyCharacter = document.getElementById("flappy-character");
   const flappyRect = flappyCharacter.getBoundingClientRect();
   const gameContainer = document.querySelector(".flappy-game-container");
   const containerRect = gameContainer.getBoundingClientRect();
 
+  // 計算實際的遊戲區域邊界（考慮地面高度）
+  const groundHeight = containerRect.height * 0.1; // 地面高度為10%
+  const topLimit = containerRect.top + 20; // 增加頂部邊界容忍度
+  const bottomLimit = containerRect.bottom - groundHeight - 10; // 增加底部邊界容忍度
+
   // 檢查是否碰到上下邊界
-  if (
-    flappyRect.top <= containerRect.top ||
-    flappyRect.bottom >= containerRect.bottom
-  ) {
+  if (flappyRect.top <= topLimit || flappyRect.bottom >= bottomLimit) {
+    console.log("撞到上下邊界", {
+      birdTop: flappyRect.top,
+      topLimit: topLimit,
+      birdBottom: flappyRect.bottom,
+      bottomLimit: bottomLimit,
+    });
     endFlappyGame(false);
     return;
   }
 
-  // 檢查是否碰到管道
+  // 檢查是否碰到管道 - 使用更寬鬆的碰撞檢測
   for (const pipe of pipes) {
     const topPipeRect = pipe.top.getBoundingClientRect();
     const bottomPipeRect = pipe.bottom.getBoundingClientRect();
 
-    // 簡化的碰撞檢測
-    if (
-      flappyRect.right > topPipeRect.left &&
-      flappyRect.left < topPipeRect.right &&
-      (flappyRect.top < topPipeRect.bottom ||
-        flappyRect.bottom > bottomPipeRect.top)
-    ) {
-      endFlappyGame(false);
-      return;
+    // 獲取管道的實際位置
+    const currentRight = parseInt(pipe.top.style.right || "0");
+    if (isNaN(currentRight)) continue;
+
+    const pipeLeft = containerRect.right - topPipeRect.width - currentRight;
+    const pipeRight = pipeLeft + topPipeRect.width;
+
+    // 碰撞檢測 - 給小鳥更多"寬容度"
+    const horizontalOverlap =
+      flappyRect.right - 20 > pipeLeft && flappyRect.left + 20 < pipeRight;
+
+    if (horizontalOverlap) {
+      // 檢查垂直方向是否有碰撞，給予更寬鬆的判定
+      const hitTopPipe = flappyRect.top + 15 < topPipeRect.bottom - 5;
+      const hitBottomPipe = flappyRect.bottom - 15 > bottomPipeRect.top + 5;
+
+      if (hitTopPipe || hitBottomPipe) {
+        console.log("撞到管道", {
+          hitTop: hitTopPipe,
+          hitBottom: hitBottomPipe,
+          birdTop: flappyRect.top,
+          pipeBottom: topPipeRect.bottom,
+          birdBottom: flappyRect.bottom,
+          pipeTop: bottomPipeRect.top,
+        });
+        endFlappyGame(false);
+        return;
+      }
     }
   }
 }
@@ -1009,33 +1129,57 @@ function updateFlappyScore() {
 
 // 結束遊戲
 function endFlappyGame(success) {
+  console.log("結束遊戲，成功:", success);
+
+  // 防止重複調用
+  if (!flappyGameActive) return;
+
   flappyGameActive = false;
   clearInterval(pipeGenerationInterval);
   cancelAnimationFrame(flappyAnimationFrame);
 
+  // 添加視覺反饋
+  const flappyCharacter = document.getElementById("flappy-character");
+
+  if (success) {
+    // 成功動畫
+    flappyCharacter.classList.add("flappy-success");
+  } else {
+    // 失敗動畫
+    flappyCharacter.classList.add("flappy-crash");
+  }
+
   // 移除事件監聽器
   document.removeEventListener("keydown", handleFlappyJump);
   document.removeEventListener("touchstart", handleFlappyJump);
-  document.removeEventListener("click", handleFlappyJump);
+  const gameContainer = document.querySelector(".flappy-game-container");
+  if (gameContainer) {
+    gameContainer.removeEventListener("click", handleFlappyJump);
+  }
 
   if (success) {
     // 顯示成功訊息
-    document.getElementById("flappy-game").style.display = "none";
-    document.getElementById("flappy-complete").style.display = "block";
+    setTimeout(() => {
+      document.getElementById("flappy-game").style.display = "none";
+      document.getElementById("flappy-complete").style.display = "block";
 
-    // 增加前往卡片的按鈕
-    setTimeout(() => {
-      switchSection(
-        document.getElementById("flappy-section"),
-        document.getElementById("cards-section")
-      );
-    }, 3000);
+      // 增加前往卡片的按鈕
+      setTimeout(() => {
+        console.log("切換到卡片區塊");
+        switchSection(
+          document.getElementById("flappy-section"),
+          document.getElementById("cards-section")
+        );
+      }, 3000);
+    }, 1000);
   } else {
-    // 重置遊戲
+    // 重置遊戲 - 延遲時間增加到2秒，給玩家更多時間看到結果
+    console.log("遊戲失敗，準備重置");
     setTimeout(() => {
+      flappyCharacter.classList.remove("flappy-crash");
       document.getElementById("flappy-intro").style.display = "block";
       document.getElementById("flappy-game").style.display = "none";
-    }, 1000);
+    }, 2000);
   }
 }
 
@@ -1056,3 +1200,34 @@ document.addEventListener("DOMContentLoaded", function () {
       resetApp();
     });
 });
+
+// 顯示得分通知
+function showScoreNotification(score) {
+  const gameContainer = document.querySelector(".flappy-game-container");
+
+  // 創建通知元素
+  const notification = document.createElement("div");
+  notification.className = "score-notification";
+
+  // 計算剩餘分數
+  const remaining = 10 - score;
+
+  // 設置通知內容
+  notification.textContent = `+1分! 還需${remaining}分通關`;
+
+  // 添加到遊戲容器
+  gameContainer.appendChild(notification);
+
+  // 設置動畫
+  setTimeout(() => {
+    notification.classList.add("show");
+  }, 10);
+
+  // 動畫結束後移除
+  setTimeout(() => {
+    notification.classList.remove("show");
+    setTimeout(() => {
+      notification.remove();
+    }, 500);
+  }, 1500);
+}
