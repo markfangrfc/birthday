@@ -577,7 +577,7 @@ function startShootingStarsGame() {
         }, 1000);
       }
     }
-  }, 2000); // 每2秒發射一顆流星
+  }, 1000); // 每1秒發射一顆流星，速度加快一倍
 }
 
 function clearShootingStars() {
@@ -672,7 +672,7 @@ function createShootingStar(wish) {
   });
 
   // 設置流星動畫
-  const duration = Math.random() * 3000 + 4000; // 4-7秒
+  const duration = (Math.random() * 3000 + 4000) / 2; // 2-3.5秒，原來是4-7秒
 
   // 計算終點位置
   const endX = window.innerWidth + 150;

@@ -643,6 +643,27 @@ h2 {
     #countdown-number {
         font-size: 8rem;
     }
+
+    /* 流星遊戲在手機上的調整 */
+    .shooting-star {
+        transform-origin: center left;
+        transform: scale(0.8) rotate(0deg);
+    }
+    
+    .star-head {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .star-tail {
+        width: 80px;
+        height: 2px;
+    }
+    
+    .star-wish {
+        font-size: 12px;
+        transform: translateY(15px);
+    }
 }
 
 #click-to-blow {
@@ -1266,11 +1287,23 @@ h2 {
     .envelopes-container {
         flex-direction: column;
         align-items: center;
+        gap: 40px;
+        margin: 30px auto;
+        max-width: 280px;
     }
     
     .envelope {
-        width: 250px;
-        margin-bottom: 20px;
+        width: 280px;
+        height: 140px;
+        margin-bottom: 0;
+    }
+    
+    .envelope-content {
+        height: 65%;
+    }
+    
+    .sender {
+        font-size: 1.2rem;
     }
     
     .fullscreen-content {
@@ -1320,6 +1353,10 @@ h2 {
     
     .highlight {
         font-size: 1.3rem;
+    }
+    
+    .self-message-form {
+        margin-top: 40px;
     }
 }
 
