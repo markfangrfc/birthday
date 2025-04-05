@@ -1281,6 +1281,46 @@ h2 {
     .message-header h3 {
         font-size: 1.5rem;
     }
+
+    /* 增強Flappy Bird在手機上的體驗 */
+    .flappy-game-container {
+        height: 60vh;
+        max-width: 95%;
+        margin: 10px auto;
+    }
+    
+    #flappy-character {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .pipe {
+        width: 60px;
+    }
+    
+    .pipe-head {
+        width: 80px;
+        left: -10px;
+    }
+    
+    #flappy-score {
+        font-size: 20px;
+        top: 10px;
+        right: 10px;
+    }
+    
+    .score-notification {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+    
+    .game-goal {
+        font-size: 1rem;
+    }
+    
+    .highlight {
+        font-size: 1.3rem;
+    }
 }
 
 /* 給自己的留言表單樣式 */
@@ -1358,4 +1398,42 @@ h2 {
 
 #send-self-message:active {
     transform: translateY(0);
+}
+
+/* 自我留言表單的響應式設計 */
+@media (max-width: 768px) {
+    /* 自我留言表單適配移動設備 */
+    .self-message-form {
+        width: 90%;
+        padding: 15px;
+        margin: 15px auto 5px;
+    }
+
+    .self-message-form h3 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+    }
+
+    .message-input-container {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #self-message-input {
+        min-height: 60px;
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    #send-self-message {
+        align-self: center;
+        width: 100%;
+        height: 44px;
+        margin-top: 5px;
+    }
+
+    .message-status {
+        font-size: 14px;
+        min-height: 22px;
+    }
 } 

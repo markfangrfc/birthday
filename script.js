@@ -1342,7 +1342,7 @@ function sendSelfMessage() {
   const message = messageInput.value.trim();
 
   if (!message) {
-    messageStatus.textContent = "請輸入留言內容！";
+    messageStatus.textContent = "與自己說說話吧!";
     messageStatus.className = "message-status error";
     setTimeout(() => {
       messageStatus.textContent = "";
@@ -1350,51 +1350,29 @@ function sendSelfMessage() {
     return;
   }
 
-  // 禁用按鈕，防止重複提交
+  // 獲取按鈕元素
   const sendButton = document.getElementById("send-self-message");
-  sendButton.disabled = true;
-  sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 發送中...';
 
-  // 顯示發送中狀態
-  messageStatus.textContent = "正在發送留言...";
-  messageStatus.className = "message-status";
+  // 立即顯示成功訊息，不顯示發送中狀態
+  messageInput.value = "";
+  messageStatus.textContent = "已傳送到妳心中，再次祝妳生日快樂！";
+  messageStatus.className = "message-status success";
 
+  // 3秒後清除狀態
+  setTimeout(() => {
+    messageStatus.textContent = "";
+  }, 3000);
+
+  // 在背景中發送留言，但不顯示任何等待狀態
   try {
     // 使用sheets.js中的發送函數
-    sendSelfMessageToSheets(message)
-      .then(() => {
-        // 發送成功
-        messageInput.value = "";
-        messageStatus.textContent = "留言發送成功！已保存到資料庫。";
-        messageStatus.className = "message-status success";
-
-        // 啟用按鈕
-        sendButton.disabled = false;
-        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
-
-        // 3秒後清除狀態
-        setTimeout(() => {
-          messageStatus.textContent = "";
-        }, 3000);
-      })
-      .catch((error) => {
-        // 發送失敗
-        console.error("發送留言失敗:", error);
-        messageStatus.textContent = "發送失敗，請稍後再試！";
-        messageStatus.className = "message-status error";
-
-        // 啟用按鈕
-        sendButton.disabled = false;
-        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
-      });
+    sendSelfMessageToSheets(message).catch((error) => {
+      console.error("發送留言失敗:", error);
+      // 不顯示錯誤訊息給用戶，保持正面體驗
+    });
   } catch (error) {
     console.error("發送留言過程中發生異常:", error);
-    messageStatus.textContent = "發送失敗，請稍後再試！";
-    messageStatus.className = "message-status error";
-
-    // 啟用按鈕
-    sendButton.disabled = false;
-    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
+    // 不顯示錯誤訊息給用戶，保持正面體驗
   }
 }
 
