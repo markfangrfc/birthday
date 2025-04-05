@@ -1281,4 +1281,81 @@ h2 {
     .message-header h3 {
         font-size: 1.5rem;
     }
+}
+
+/* 給自己的留言表單樣式 */
+.self-message-form {
+    width: 100%;
+    max-width: 600px;
+    margin: 25px auto 10px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.self-message-form h3 {
+    color: #ff6b6b;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.message-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+#self-message-input {
+    flex: 1;
+    min-height: 80px;
+    padding: 12px 15px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 16px;
+    resize: vertical;
+    font-family: inherit;
+    transition: border-color 0.3s;
+}
+
+#self-message-input:focus {
+    border-color: #ff6b6b;
+    outline: none;
+}
+
+#send-self-message {
+    align-self: flex-end;
+    height: 50px;
+    white-space: nowrap;
+}
+
+.message-status {
+    min-height: 30px;
+    text-align: center;
+    font-weight: bold;
+    transition: opacity 0.3s;
+}
+
+.message-status.success {
+    color: #4caf50;
+}
+
+.message-status.error {
+    color: #f44336;
+}
+
+/* 發送按鈕效果 */
+#send-self-message {
+    background-color: #4caf50;
+    transition: all 0.3s ease;
+}
+
+#send-self-message:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+#send-self-message:active {
+    transform: translateY(0);
 } 

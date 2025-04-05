@@ -114,6 +114,18 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("start-flappy-button")
     .addEventListener("click", startFlappyGame);
+
+  // 重新開始按鈕
+  document
+    .getElementById("restart-all-button")
+    .addEventListener("click", function () {
+      resetApp();
+    });
+
+  // 處理發送給自己的留言
+  document
+    .getElementById("send-self-message")
+    .addEventListener("click", sendSelfMessage);
 });
 
 // 設置願望列表的事件處理
@@ -468,6 +480,17 @@ function resetApp() {
   if (fullscreenContainer) {
     fullscreenContainer.classList.remove("active");
     document.body.style.overflow = "";
+  }
+
+  // 清空自我留言輸入框和狀態
+  const selfMessageInput = document.getElementById("self-message-input");
+  const messageStatus = document.getElementById("message-status");
+  if (selfMessageInput) {
+    selfMessageInput.value = "";
+  }
+  if (messageStatus) {
+    messageStatus.textContent = "";
+    messageStatus.className = "message-status";
   }
 
   console.log("重置應用完成");
@@ -1310,4 +1333,83 @@ function showScoreNotification(score) {
       notification.remove();
     }, 500);
   }, 1500);
+}
+
+// 發送給自己的留言
+function sendSelfMessage() {
+  const messageInput = document.getElementById("self-message-input");
+  const messageStatus = document.getElementById("message-status");
+  const message = messageInput.value.trim();
+
+  if (!message) {
+    messageStatus.textContent = "請輸入留言內容！";
+    messageStatus.className = "message-status error";
+    setTimeout(() => {
+      messageStatus.textContent = "";
+    }, 3000);
+    return;
+  }
+
+  // 禁用按鈕，防止重複提交
+  const sendButton = document.getElementById("send-self-message");
+  sendButton.disabled = true;
+  sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 發送中...';
+
+  // 顯示發送中狀態
+  messageStatus.textContent = "正在發送留言...";
+  messageStatus.className = "message-status";
+
+  try {
+    // 使用sheets.js中的發送函數
+    sendSelfMessageToSheets(message)
+      .then(() => {
+        // 發送成功
+        messageInput.value = "";
+        messageStatus.textContent = "留言發送成功！已保存到資料庫。";
+        messageStatus.className = "message-status success";
+
+        // 啟用按鈕
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
+
+        // 3秒後清除狀態
+        setTimeout(() => {
+          messageStatus.textContent = "";
+        }, 3000);
+      })
+      .catch((error) => {
+        // 發送失敗
+        console.error("發送留言失敗:", error);
+        messageStatus.textContent = "發送失敗，請稍後再試！";
+        messageStatus.className = "message-status error";
+
+        // 啟用按鈕
+        sendButton.disabled = false;
+        sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
+      });
+  } catch (error) {
+    console.error("發送留言過程中發生異常:", error);
+    messageStatus.textContent = "發送失敗，請稍後再試！";
+    messageStatus.className = "message-status error";
+
+    // 啟用按鈕
+    sendButton.disabled = false;
+    sendButton.innerHTML = '<i class="fas fa-paper-plane"></i> 送出';
+  }
+}
+
+// 發送自我留言到Google Sheets
+function sendSelfMessageToSheets(message) {
+  try {
+    console.log("正在發送自我留言到 Google Sheets");
+
+    // 在留言前加上標識，以便在Excel中區分
+    const formattedMessage = `[給自己的留言] ${message}`;
+
+    // 直接調用願望發送函數，使用相同格式但帶有標識的內容
+    return sendWishToGoogleSheets(formattedMessage);
+  } catch (error) {
+    console.error("發送自我留言過程中發生異常:", error);
+    return Promise.reject(error);
+  }
 }

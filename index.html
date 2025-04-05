@@ -236,7 +236,23 @@
           </div>
         </div>
       </div>
-      <button id="restart-all-button" class="button">重新開始</button>
+      <!-- 給自己的留言表單 -->
+      <div class="self-message-form">
+        <h3>給自己的一句話</h3>
+        <div class="message-input-container">
+          <textarea
+            id="self-message-input"
+            placeholder="寫下你想對自己說的話..."
+          ></textarea>
+          <button id="send-self-message" class="button">
+            <i class="fas fa-paper-plane"></i> 送出
+          </button>
+        </div>
+        <div id="message-status" class="message-status"></div>
+      </div>
+      <button id="restart-all-button" class="button" style="margin-top: 30px">
+        重新開始
+      </button>
     </div>
 
     <!-- 全屏閱讀區塊 -->
