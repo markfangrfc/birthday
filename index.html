@@ -201,54 +201,57 @@
 
     <!-- 祝福卡片區塊 -->
     <div id="cards-section" class="section">
-      <h2>生日祝福卡片</h2>
-      <div class="cards-container">
-        <div class="card" data-card="1">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-number">1</div>
-            </div>
-            <div class="card-back">
-              <h3>來自好友的祝福</h3>
-              <p>親愛的朋友，祝你生日快樂！願你的新一年充滿歡笑和幸福。</p>
+      <h2>生日祝福信箱</h2>
+      <div class="envelopes-container">
+        <div class="envelope" data-card="1">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自好友的祝福</div>
             </div>
           </div>
         </div>
-        <div class="card" data-card="2">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-number">2</div>
-            </div>
-            <div class="card-back">
-              <h3>來自家人的祝福</h3>
-              <p>生日快樂！感謝你為這個家帶來的所有溫暖和愛。</p>
+        <div class="envelope" data-card="2">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自家人的祝福</div>
             </div>
           </div>
         </div>
-        <div class="card" data-card="3">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-number">3</div>
-            </div>
-            <div class="card-back">
-              <h3>來自同事的祝福</h3>
-              <p>祝你生日快樂！與你共事是我們的榮幸，願你擁有美好的一年。</p>
+        <div class="envelope" data-card="3">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自同事的祝福</div>
             </div>
           </div>
         </div>
-        <div class="card" data-card="4">
-          <div class="card-inner">
-            <div class="card-front">
-              <div class="card-number">4</div>
-            </div>
-            <div class="card-back">
-              <h3>特別的祝福</h3>
-              <p>生日快樂！願你的願望都能實現，未來的日子充滿驚喜和美好。</p>
+        <div class="envelope" data-card="4">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">特別的祝福</div>
             </div>
           </div>
         </div>
       </div>
       <button id="restart-all-button" class="button">重新開始</button>
+    </div>
+
+    <!-- 全屏閱讀區塊 -->
+    <div id="fullscreen-message" class="fullscreen-container">
+      <div class="fullscreen-content">
+        <div class="message-header">
+          <h3 id="message-title">祝福標題</h3>
+          <button id="close-message" class="close-button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="message-body">
+          <p id="message-text">祝福內容會顯示在這裡，可以是很長的文字內容...</p>
+        </div>
+      </div>
     </div>
 
     <audio

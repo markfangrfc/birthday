@@ -20,6 +20,30 @@ let pipes = [];
 let flappyAnimationFrame;
 let pipeGenerationInterval;
 
+// 初始化祝福信息內容
+const messageContents = [
+  {
+    id: 1,
+    title: "來自好友的祝福",
+    text: "親愛的朋友，祝你生日快樂！\n\n在這特別的日子裡，我想對你說的不只是簡單的祝福。還記得我們一起經歷的所有時光嗎？那些深夜的談心，那些一起哭過笑過的瞬間，那些在人生低谷時互相扶持的日子。\n\n我很感激命運讓我們相遇，並成為彼此生命中重要的人。你的友誼對我來說是無價的寶藏。\n\n願你在新的一年裡，健康快樂，心想事成。願你的生活充滿陽光，遇見更好的人，去到更遠的地方，實現更多的夢想。\n\n生日快樂，我最好的朋友！",
+  },
+  {
+    id: 2,
+    title: "來自家人的祝福",
+    text: "親愛的家人，生日快樂！\n\n不知不覺中，我們已經一起走過了這麼多年。從你牙牙學語的童年，到現在成為一個優秀的大人，我們見證了你的每一步成長。\n\n家是你永遠的避風港，無論你走到哪裡，飛得多高，這裡永遠有愛在等你。感謝你為這個家帶來的所有溫暖、歡笑和愛。\n\n在你生日的這一天，我們衷心祝福你：願你擁有健康的身體，開朗的心情，和永不止息的追求夢想的勇氣。\n\n無論未來如何，我們都會一直支持你，愛你。生日快樂！",
+  },
+  {
+    id: 3,
+    title: "來自同事的祝福",
+    text: "親愛的同事，祝你生日快樂！\n\n很榮幸能與你共事，見證你的專業與成長。你的熱情、專注和創新思維總是能為團隊帶來正能量和新鮮想法。\n\n在工作中，你展現出的不僅是專業技能，更是那份對細節的重視、對品質的堅持，以及面對挑戰時永不放棄的精神。這些都讓我們深感敬佩。\n\n願你在新的一年裡，不僅在事業上更上一層樓，也能在生活中找到更多樂趣和平衡。願你的每一天都如陽光般明媚，充滿驚喜和可能。\n\n期待繼續與你共事，創造更多美好的回憶。生日快樂！",
+  },
+  {
+    id: 4,
+    title: "特別的祝福",
+    text: "親愛的壽星，\n\n在這個特別的日子，我想送上最特別的祝福。\n\n生命就像一場旅行，而你已經勇敢地走過了人生的一段路程。回首過去，有歡笑，有淚水，有成功，也有挫折，但這些都是讓你成為今天這個獨特而珍貴的人的寶貴經歷。\n\n感謝你的存在，讓這個世界因為你的笑容、你的善良、你的熱情而更加美好。你的生命影響著周圍的每一個人，以你可能都未曾察覺的方式。\n\n願你的未來充滿無限可能，願你勇敢追求夢想，願你的心靈永遠充滿愛與希望。願你在人生的道路上，遇見最美的風景，結識最真的朋友，體驗最深的感動。\n\n生日快樂！願你所有的願望都能實現，願你的生活如你所願，充滿驚喜和美好。",
+  },
+];
+
 // DOM 載入完成後執行
 document.addEventListener("DOMContentLoaded", () => {
   // 初始化音樂
@@ -439,11 +463,12 @@ function resetApp() {
   clearInterval(pipeGenerationInterval);
   cancelAnimationFrame(flappyAnimationFrame);
 
-  // 重置卡片狀態
-  const cards = document.querySelectorAll(".card");
-  cards.forEach((card) => {
-    card.classList.remove("flipped");
-  });
+  // 關閉全屏閱讀模式
+  const fullscreenContainer = document.getElementById("fullscreen-message");
+  if (fullscreenContainer) {
+    fullscreenContainer.classList.remove("active");
+    document.body.style.overflow = "";
+  }
 
   console.log("重置應用完成");
 }
@@ -1163,9 +1188,18 @@ function endFlappyGame(success) {
       document.getElementById("flappy-game").style.display = "none";
       document.getElementById("flappy-complete").style.display = "block";
 
-      // 增加前往卡片的按鈕
+      // 增加前往信封的提示
+      const completeMessage = document.querySelector(
+        "#flappy-complete .game-success-message p"
+      );
+      if (completeMessage) {
+        completeMessage.textContent =
+          "即將進入祝福信箱，查看為你準備的特別祝福！";
+      }
+
+      // 增加前往信封的按鈕
       setTimeout(() => {
-        console.log("切換到卡片區塊");
+        console.log("切換到信封區塊");
         switchSection(
           document.getElementById("flappy-section"),
           document.getElementById("cards-section")
@@ -1185,12 +1219,58 @@ function endFlappyGame(success) {
 
 // 卡片相關功能
 document.addEventListener("DOMContentLoaded", function () {
-  // 初始化卡片點擊事件
-  const cards = document.querySelectorAll(".card");
-  cards.forEach((card) => {
-    card.addEventListener("click", function () {
-      this.classList.toggle("flipped");
+  // 初始化信封點擊事件
+  const envelopes = document.querySelectorAll(".envelope");
+  const fullscreenContainer = document.getElementById("fullscreen-message");
+  const messageTitle = document.getElementById("message-title");
+  const messageText = document.getElementById("message-text");
+  const closeButton = document.getElementById("close-message");
+
+  // 點擊信封打開全屏閱讀模式
+  envelopes.forEach((envelope) => {
+    envelope.addEventListener("click", function () {
+      const cardId = parseInt(this.getAttribute("data-card"));
+      const message = messageContents.find((m) => m.id === cardId);
+
+      if (message) {
+        // 將文本中的換行符轉換為HTML的<br>
+        const formattedText = message.text.replace(/\n/g, "<br>");
+
+        messageTitle.textContent = message.title;
+        messageText.innerHTML = formattedText;
+        fullscreenContainer.classList.add("active");
+
+        // 防止滾動背景
+        document.body.style.overflow = "hidden";
+      }
     });
+  });
+
+  // 關閉按鈕事件
+  closeButton.addEventListener("click", function () {
+    fullscreenContainer.classList.remove("active");
+
+    // 恢復背景滾動
+    document.body.style.overflow = "";
+  });
+
+  // 點擊背景也可以關閉
+  fullscreenContainer.addEventListener("click", function (event) {
+    if (event.target === fullscreenContainer) {
+      fullscreenContainer.classList.remove("active");
+      document.body.style.overflow = "";
+    }
+  });
+
+  // ESC鍵關閉全屏閱讀
+  document.addEventListener("keydown", function (event) {
+    if (
+      event.key === "Escape" &&
+      fullscreenContainer.classList.contains("active")
+    ) {
+      fullscreenContainer.classList.remove("active");
+      document.body.style.overflow = "";
+    }
   });
 
   // 重新開始按鈕
