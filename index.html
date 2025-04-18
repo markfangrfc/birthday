@@ -1,176 +1,280 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>生日快樂！</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+  <body>
     <!-- 倒數計時區塊 -->
     <div id="countdown" class="section active">
-        <div id="countdown-number">3</div>
+      <div id="countdown-number">3</div>
     </div>
 
     <!-- 生日蛋糕區塊 -->
     <div id="cake-section" class="section">
-        <div class="cake-container">
-            <div class="cake">
-                <div class="cake-base"></div>
-                <div class="cake-middle"></div>
-                <div class="cake-top"></div>
-                
-                <!-- 蠟燭 -->
-                <div class="candles">
-                    <div class="candle">
-                        <div class="flame" id="flame1">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="smoke1"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame" id="flame2">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="smoke2"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame" id="flame3">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="smoke3"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                </div>
+      <div class="cake-container">
+        <div class="cake">
+          <div class="cake-base"></div>
+          <div class="cake-middle"></div>
+          <div class="cake-top"></div>
+
+          <!-- 蠟燭 -->
+          <div class="candles">
+            <div class="candle">
+              <div class="flame" id="flame1">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="smoke1"></div>
+              <div class="candle-body"></div>
             </div>
+            <div class="candle">
+              <div class="flame" id="flame2">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="smoke2"></div>
+              <div class="candle-body"></div>
+            </div>
+            <div class="candle">
+              <div class="flame" id="flame3">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="smoke3"></div>
+              <div class="candle-body"></div>
+            </div>
+          </div>
         </div>
-        <div class="birthday-message">祝你生日快樂！<br>這是專屬於你的生日網站！</div>
-        <button id="next-button" class="button">開始許願 <i class="fas fa-arrow-right"></i></button>
+      </div>
+      <div class="birthday-message">
+        祝你生日快樂！<br />這是專屬於你的生日網站！
+      </div>
+      <button id="next-button" class="button">
+        開始許願 <i class="fas fa-arrow-right"></i>
+      </button>
     </div>
 
     <!-- 願望填寫區塊 -->
     <div id="wish-section" class="section">
-        <h2>在這寫下你的願望吧！<br>可不只限於三個喔！</h2>
-        <div class="wish-form">
-            <input type="text" id="wish-input" placeholder="輸入你的願望...">
-            <button id="add-wish" class="button">添加願望</button>
-        </div>
-        <div class="wishes-container">
-            <h3>我的願望清單：</h3>
-            <ul id="wishes-list"></ul>
-        </div>
-        <button id="blow-candles-button" class="button">寫完吹蠟燭❤️ <i class="fas fa-wind"></i></button>
+      <h2>在這寫下你的願望吧！<br />可不只限於三個喔！</h2>
+      <div class="wish-form">
+        <input type="text" id="wish-input" placeholder="輸入你的願望..." />
+        <button id="add-wish" class="button">添加願望</button>
+      </div>
+      <div class="wishes-container">
+        <h3>我的願望清單：</h3>
+        <ul id="wishes-list"></ul>
+      </div>
+      <button id="blow-candles-button" class="button">
+        寫完吹蠟燭❤️ <i class="fas fa-wind"></i>
+      </button>
     </div>
 
     <!-- 吹蠟燭遊戲區塊 -->
     <div id="blow-section" class="section">
-        <div class="blow-instructions">
-            <h2>用力吹熄蠟燭吧！</h2>
-            <p>對著麥克風吹氣，讓蠟燭熄滅！</p>
-            <button id="start-mic" class="button">開始遊戲</button>
-            <div id="volume-meter">
-                <div id="volume-level"></div>
-            </div>
+      <div class="blow-instructions">
+        <h2>用力吹熄蠟燭吧！</h2>
+        <p>對著麥克風吹氣，讓蠟燭熄滅！</p>
+        <button id="start-mic" class="button">開始遊戲</button>
+        <div id="volume-meter">
+          <div id="volume-level"></div>
         </div>
-        
-        <div class="cake-container">
-            <div class="cake">
-                <div class="cake-base"></div>
-                <div class="cake-middle"></div>
-                <div class="cake-top"></div>
-                
-                <!-- 蠟燭 -->
-                <div class="candles">
-                    <div class="candle">
-                        <div class="flame blow-flame" id="blow-flame1">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="blow-smoke1"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame blow-flame" id="blow-flame2">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="blow-smoke2"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame blow-flame" id="blow-flame3">
-                            <div class="inner-flame"></div>
-                        </div>
-                        <div class="smoke" id="blow-smoke3"></div>
-                        <div class="candle-body"></div>
-                    </div>
-                </div>
+      </div>
+
+      <div class="cake-container">
+        <div class="cake">
+          <div class="cake-base"></div>
+          <div class="cake-middle"></div>
+          <div class="cake-top"></div>
+
+          <!-- 蠟燭 -->
+          <div class="candles">
+            <div class="candle">
+              <div class="flame blow-flame" id="blow-flame1">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="blow-smoke1"></div>
+              <div class="candle-body"></div>
             </div>
+            <div class="candle">
+              <div class="flame blow-flame" id="blow-flame2">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="blow-smoke2"></div>
+              <div class="candle-body"></div>
+            </div>
+            <div class="candle">
+              <div class="flame blow-flame" id="blow-flame3">
+                <div class="inner-flame"></div>
+              </div>
+              <div class="smoke" id="blow-smoke3"></div>
+              <div class="candle-body"></div>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
 
     <!-- 願望達成區塊 -->
     <div id="success-section" class="section">
-        <div class="success-message">
-            <h2>流星聽到你的願望了！</h2>
-            <p>希望你的願望都能實現✨</p>
-            <div class="wishes-summary">
-                <h3>你的願望清單：</h3>
-                <ul id="final-wishes-list"></ul>
-            </div>
-            <button id="start-shooting-stars" class="button">進入遊戲！讓願望成真 <i class="fas fa-meteor"></i></button>
+      <div class="success-message">
+        <h2>流星聽到你的願望了！</h2>
+        <p>希望你的願望都能實現✨</p>
+        <div class="wishes-summary">
+          <h3>你的願望清單：</h3>
+          <ul id="final-wishes-list"></ul>
         </div>
+        <button id="start-shooting-stars" class="button">
+          進入遊戲！讓願望成真 <i class="fas fa-meteor"></i>
+        </button>
+      </div>
     </div>
 
     <!-- 流星遊戲區塊 -->
     <div id="shooting-stars-section" class="section">
-        <!-- 遊戲規則介紹部分 -->
-        <div id="game-intro" class="game-instructions">
-            <h2>收集流星中的願望</h2>
-            <p>點擊飛過的流星來收集願望，讓願望成真！</p>
-            <div id="score-display">願望數量: <span id="total-stars">0</span> 個</div>
-            <button id="start-game-button" class="button">開始收集 <i class="fas fa-play"></i></button>
+      <!-- 遊戲規則介紹部分 -->
+      <div id="game-intro" class="game-instructions">
+        <h2>收集流星中的願望</h2>
+        <p>點擊飛過的流星來收集願望，讓願望成真！</p>
+        <div id="score-display">
+          願望數量: <span id="total-stars">0</span> 個
         </div>
-        
-        <!-- 遊戲進行中部分 -->
-        <div id="game-play" class="game-play" style="display: none;">
-            <div class="game-status">
-                <div id="score-display-playing">已收集: <span id="score">0</span>/<span id="total-stars-playing">0</span></div>
-            </div>
+        <button id="start-game-button" class="button">
+          開始收集 <i class="fas fa-play"></i>
+        </button>
+      </div>
+
+      <!-- 遊戲進行中部分 -->
+      <div id="game-play" class="game-play" style="display: none">
+        <div class="game-status">
+          <div id="score-display-playing">
+            已收集: <span id="score">0</span>/<span id="total-stars-playing"
+              >0</span
+            >
+          </div>
         </div>
-        
-        <!-- 遊戲完成部分 -->
-        <div id="game-complete" class="game-complete" style="display: none;">
-            <div class="game-success-message">
-                <h2>願望全部收集完成！</h2>
-                <p>你的願望一定會實現的❤️</p>
-            </div>
+      </div>
+
+      <!-- 遊戲完成部分 -->
+      <div id="game-complete" class="game-complete" style="display: none">
+        <div class="game-success-message">
+          <h2>願望全部收集完成！</h2>
+          <p>你的願望一定會實現的❤️</p>
         </div>
-        
-        <div id="shooting-stars-container" class="stars-container">
-            <!-- 流星會在這裡動態生成 -->
-        </div>
-        
-        <div class="game-controls">
-            <button id="restart-button" class="button">重新開始</button>
-        </div>
+      </div>
+
+      <div id="shooting-stars-container" class="stars-container">
+        <!-- 流星會在這裡動態生成 -->
+      </div>
     </div>
 
-    <div class="section" id="message-wall-section">
-        <div class="message-wall-container">
-            <div class="message-wall">
-                <div class="message-scroll" id="messageScroll">
-                    <!-- 訊息會被動態添加到這裡 -->
-                </div>
-            </div>
+    <!-- Flappy Bird 遊戲區塊 -->
+    <div id="flappy-section" class="section">
+      <div id="flappy-intro" class="game-instructions">
+        <h2>前往祝福留言牆</h2>
+        <p>幫助壽星飛越障礙，到達祝福留言牆！</p>
+        <p class="game-goal">
+          目標：得到<span class="highlight">10分</span>通關！
+        </p>
+        <button id="start-flappy-button" class="button">
+          開始遊戲 <i class="fas fa-play"></i>
+        </button>
+      </div>
+
+      <div id="flappy-game" class="flappy-game-container" style="display: none">
+        <div id="flappy-score">得分: <span>0</span></div>
+        <div id="flappy-character"></div>
+        <div id="flappy-game-area"></div>
+      </div>
+
+      <div id="flappy-complete" class="game-complete" style="display: none">
+        <div class="game-success-message">
+          <h2>太棒了！成功抵達祝福留言牆</h2>
+          <p>點擊卡片查看祝福留言</p>
         </div>
+      </div>
     </div>
 
-    <audio id="birthday-song" src="happy-birthday-jazz-171120.mp3" preload="auto"></audio>
+    <!-- 祝福卡片區塊 -->
+    <div id="cards-section" class="section">
+      <h2>生日祝福信箱</h2>
+      <div class="envelopes-container">
+        <div class="envelope" data-card="1">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自好友的祝福</div>
+            </div>
+          </div>
+        </div>
+        <div class="envelope" data-card="2">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自家人的祝福</div>
+            </div>
+          </div>
+        </div>
+        <div class="envelope" data-card="3">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">來自同事的祝福</div>
+            </div>
+          </div>
+        </div>
+        <div class="envelope" data-card="4">
+          <div class="envelope-front">
+            <div class="envelope-flap"></div>
+            <div class="envelope-content">
+              <div class="sender">特別的祝福</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 給自己的留言表單 -->
+      <div class="self-message-form">
+        <h3>也給自己留下祝福吧</h3>
+        <div class="message-input-container">
+          <textarea
+            id="self-message-input"
+            placeholder="寫下你想對自己說的話..."
+          ></textarea>
+          <button id="send-self-message" class="button">
+            <i class="fas fa-paper-plane"></i> 送給自己
+          </button>
+        </div>
+        <div id="message-status" class="message-status"></div>
+      </div>
+    </div>
+
+    <!-- 全屏閱讀區塊 -->
+    <div id="fullscreen-message" class="fullscreen-container">
+      <div class="fullscreen-content">
+        <div class="message-header">
+          <h3 id="message-title">祝福標題</h3>
+          <button id="close-message" class="close-button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="message-body">
+          <p id="message-text">祝福內容會顯示在這裡，可以是很長的文字內容...</p>
+        </div>
+      </div>
+    </div>
+
+    <audio
+      id="birthday-song"
+      src="happy-birthday-jazz-171120.mp3"
+      preload="auto"
+    ></audio>
 
     <script src="script.js"></script>
     <script src="audio.js"></script>
     <script src="sheets.js"></script>
-</body>
-</html> 
+  </body>
+</html>
